@@ -9,7 +9,7 @@ const Navbar = () => {
     <nav>
       <div className='flex items-center gap-2'>
         <img src={logo} className='w-14 rounded-full' alt="BonomayaLogo" />
-        {/* <h1 className='text-2xl font-bold'>BONOMAYA</h1> */}
+        {/* <h1 className='text-2xl font-bold'>BONOMAYAA</h1> */}
       </div>
       <ul>
         <li>Home</li>
