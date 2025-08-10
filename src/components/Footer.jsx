@@ -49,9 +49,9 @@ const Footer = () => {
                     </ul>
                 </div>
             </div>
-            <div className='flex flex-col items-center justify-center sm:col-span-2 lg:col-span-1'>
+            <div className='flex flex-col items-center lg:block justify-center sm:col-span-2 lg:col-span-1'>
                  <h3 className='text-xl font-semibold'>Join Our Newsletter</h3>
-                 <p className='mt-4 text-sm text-brand-accent text-center'>
+                 <p className='mt-4 text-sm text-brand-accent text-center lg:text-start'>
                     Subscribe for plant care tips, fresh arrivals, and exclusive offers plus enjoy 10% off your first order!
                  </p>
                  <input 
