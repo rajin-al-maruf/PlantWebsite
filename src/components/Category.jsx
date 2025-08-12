@@ -9,7 +9,7 @@ import MiniaturePlants from '../assets/plants/jade.jpg'
 
 const Category = () => {
   return (
-    <div className='max-w-7xl mx-auto my-32 flex flex-col items-center justify-center px-4 md:px-6 lg:px-8 2xl:px-0'>
+    <div className='max-w-7xl mx-auto my-32 flex flex-col items-center justify-center px-4 md:px-6 lg:px-8 xl:px-0'>
         <h2 className='text-2xl md:text-3xl font-poppins font-semibold'>
             Shop by Category
         </h2>

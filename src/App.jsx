@@ -1,19 +1,18 @@
-import Category from './components/Category'
-import FeaturedProducts from './components/FeaturedProducts'
-import Footer from './components/Footer'
-import Hero from './components/Hero'
-import Navbar from './components/Navbar'
+import { Routes, Route } from "react-router-dom"
+import PageLayout from "./PageLayout/PageLayout"
+import HomePage from "./pages/HomePage"
+import ShopPage from "./pages/ShopPage"
+
 
 function App() {
 
   return (
-    <div className='relative'>
-      <Navbar />
-      <Hero />
-      <Category />
-      <FeaturedProducts />
-      <Footer />
-    </div>
+    <Routes>
+      <Route path="/" element={<PageLayout />}>
+        <Route index element={<HomePage />}/>
+        <Route path="shop" element={<ShopPage />}/>
+      </Route>
+    </Routes>
   )
 }
 

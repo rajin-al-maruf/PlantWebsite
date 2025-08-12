@@ -6,7 +6,7 @@ const Hero = () => {
   return (
     <div className="w-full h-screen bg-brand-accent relative">
       
-      <div className="max-w-7xl mx-auto pt-35 sm:pt-40 px-4 md:px-6 lg:px-8 2xl:px-0">
+      <div className="max-w-7xl mx-auto pt-35 sm:pt-40 px-4 md:px-6 lg:px-8 xl:px-0">
         <div className='sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-3xl'>
           <h1 className="text-4xl lg:text-5xl font-bold text-brand-primary">
             Your Green Corner Starts Here
