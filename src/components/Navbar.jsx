@@ -45,7 +45,15 @@ const Navbar = () => {
           </button>
           <img src={logo} className='w-14 mt-6 rounded-full' alt="BonomayaLogo" />
           <ul className='flex flex-col mt-8 gap-4 md:gap-6'>
-            
+            <li className='cursor-pointer pb-4 border-b border-b-brand-primary text-brand-primary-dark hover:text-brand-accent font-semibold '>
+              <Link to="/">Home</Link>
+            </li>
+            <li className='cursor-pointer pb-4 border-b border-b-brand-primary text-brand-primary-dark hover:text-brand-accent font-semibold '>
+              <Link to="/shop">Shop</Link>
+            </li>
+            <li className='cursor-pointer pb-4 border-b border-b-brand-primary text-brand-primary-dark hover:text-brand-accent font-semibold '>About</li>
+            <li className='cursor-pointer pb-4 border-b border-b-brand-primary text-brand-primary-dark hover:text-brand-accent font-semibold '>Track Order</li>
+            <li className='cursor-pointer pb-4 text-brand-primary-dark hover:text-brand-accent font-semibold '>Contact</li>
           </ul>
         </div>
       </div>
