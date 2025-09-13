@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-
+import { Link } from 'react-router-dom'
 import { PiHeartStraightFill, PiHeartStraightLight } from 'react-icons/pi'
 
-const ProductCard = ({name,price,plantImg}) => {
+const ProductCard = ({id,name,price,plantImg}) => {
 
 const [isWished, setIsWished] = useState(false)
 console.log(name)
 
   return (
-    <div>
+    <Link to={`/product/${id}`}>
         <div className='w-full h-full bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer hover:shadow-xl hover:scale-101 duration-300'>
             <div className='p-2 md:p-4'>
                 <div className='w-full h-full overflow-hidden flex items-center justify-center bg-neutral-100 relative'>
@@ -29,7 +29,7 @@ console.log(name)
                 </div>
             </div>
         </div>
-    </div>
+    </Link>
   )
 }
 

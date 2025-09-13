@@ -26,7 +26,7 @@ const ShopPage = () => {
         </div>
       </div>
       <div className='md:grid grid-cols-4 gap-10 mt-6'>
-        <div className={showFilters && 'hidden'}>
+        <div className={showFilters ? 'hidden' : ''}>
           {filterInfo.map((filterInfo, index) => {
             return(
               <Filter
@@ -51,6 +51,7 @@ const ShopPage = () => {
             return(
               <ProductCard
                 key={index}
+                id={plantInfo.id}
                 name={plantInfo.name}
                 price={plantInfo.price}
                 plantImg={plantInfo.imgURL}
