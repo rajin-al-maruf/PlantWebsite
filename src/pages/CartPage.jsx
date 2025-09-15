@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const CartPage = () => {
 
@@ -100,9 +101,11 @@ const CartPage = () => {
                     <p>Total</p>
                     <p>Tk 883.84</p>
                 </div>
-                <button className='w-full p-2 text-white text-sm bg-black mt-4 rounded-md cursor-pointer'>
-                    Checkout
-                </button>
+                <Link to="/checkout"> 
+                    <button className='w-full p-2 text-white text-sm bg-black hover:bg-brand-primary duration-200 mt-4 rounded-md cursor-pointer'>
+                        Checkout
+                    </button>
+                </Link>
 
                 <p className="text-xs pt-4">Standard Shipping : within 3-4 days inside Dhaka, within 4-7 days outside Dhaka</p>
             </div>
