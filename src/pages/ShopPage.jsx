@@ -1,11 +1,56 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ProductCard from '../components/ProductCard'
-import plantInfo from '../plantInfo'
 import { CiFilter } from 'react-icons/ci'
 import Filter from '../components/Filter'
 import filterInfo from '../filterInfo'
+import { supabase } from '../supabase'
+
 
 const ShopPage = () => {
+
+  const [plants, setPlants] = useState([])
+  const [filter, setFilter] = useState({
+    category: [],
+    carelevel: [],
+    lightrequirement: [],
+    availability: [],
+  })
+  
+  // console.log(filter[filterInfo[0].id])
+
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        let plantData = supabase.from('plants').select('*');
+
+        if(filter.category.length > 0){
+          plantData = plantData.in("category", filter.category)
+        }
+        if(filter.carelevel.length > 0){
+          plantData = plantData.in("carelevel", filter.carelevel)
+        }
+        if(filter.lightrequirement.length > 0){
+          plantData = plantData.in("lightrequirement", filter.lightrequirement)
+        }
+        if(filter.availability.length > 0){
+          plantData = plantData.in("availability", filter.availability)
+        }
+
+        const {data, error} = await plantData;
+
+        if(error){
+          console.error("Supabase error:", error.message);
+        }else{
+          setPlants(data)
+        }
+
+      } catch (error) {
+        console.error("Unexpected error:", err);
+      }
+    }
+    fetchPlants()
+  },[filter])
+
 
   const [showFilters, setShowFilters] = useState(false)
   
@@ -31,9 +76,11 @@ const ShopPage = () => {
             return(
               <Filter
                 key={index}
-                id={filterInfo.id}
+                filterType={filterInfo.id}
                 title={filterInfo.title}
                 options={filterInfo.options}
+                filter={filter}
+                setFilter={setFilter}
               />
             )
           })}
@@ -47,14 +94,14 @@ const ShopPage = () => {
         <div className={showFilters ? 
             'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-8 col-span-4' : 
             'grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'}>
-          {plantInfo.map((plantInfo, index) => {
+          {plants.map((plant, index) => {
             return(
               <ProductCard
                 key={index}
-                id={plantInfo.id}
-                name={plantInfo.name}
-                price={plantInfo.price}
-                plantImg={plantInfo.imgURL}
+                id={plant.id}
+                name={plant.name}
+                price={plant.price}
+                plantImg={plant.imgurl}
               />
             )
           })}

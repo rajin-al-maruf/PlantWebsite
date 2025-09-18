@@ -5,8 +5,6 @@ import { PiHeartStraightFill, PiHeartStraightLight } from 'react-icons/pi'
 const ProductCard = ({id,name,price,plantImg}) => {
 
 const [isWished, setIsWished] = useState(false)
-console.log(name)
-
   return (
     <Link to={`/product/${id}`}>
         <div className='w-full h-full bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer hover:shadow-xl hover:scale-101 duration-300'>

@@ -10,15 +10,15 @@ const filterInfo = [
             ]
 },
 {
-    id: 'care',
+    id: 'carelevel',
     title: 'Care Level',
-    options: ['Low Maintainance',
-                'Air Purifying', 
-                'Beginner Friendly',
+    options: ['Easy',
+                'Moderate', 
+                'Hard',
             ]
 },
 {
-    id: 'light',
+    id: 'lightrequirement',
     title: 'Light Requirement',
     options: ['Low Light',
                 'Medium Light', 
@@ -32,14 +32,14 @@ const filterInfo = [
                 'Out Of Stock',
             ]
 },
-{
-    id: 'price',
-    title: 'Price Range',
-    options: ['0-500',
-                '500-1000', 
-                '1000+',
-            ]
-},
+// {
+//     id: 'price',
+//     title: 'Price Range',
+//     options: ['0-500',
+//                 '500-1000', 
+//                 '1000+',
+//             ]
+// },
 
 ]
 export default filterInfo;

@@ -1,10 +1,27 @@
 import { useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
 
-const Filter = ({id, title, options}) => {
+const Filter = ({id, title, options, filter, setFilter, filterType}) => {
 
+    // console.log(id)
 
     const [openFilter, setOpenFilter] = useState(true);
+
+    const handleCheckboxChange = (filterType, option) => {
+        setFilter((prev) => {
+            let updateFilter = [...prev[filterType]]
+
+            if(updateFilter.includes(option)){
+                updateFilter = updateFilter.filter((op) => op !== option)
+            }else{
+                updateFilter.push(option)
+            }
+            return{
+                ...prev,
+                [filterType]: updateFilter,
+            }
+        })
+    }
 
     
   return (
@@ -24,7 +41,12 @@ const Filter = ({id, title, options}) => {
                 {options.map((option, index) => {
                     return(
                         <label key={index} className="flex items-center">
-                            <input type="checkbox" className="rounded-md size-4 accent-brand-primary" />
+                            <input 
+                                type="checkbox" 
+                                className="rounded-md size-4 accent-brand-primary" 
+                                onChange={() => handleCheckboxChange(filterType, option)}
+                                // checked={filter.category.includes(option)}
+                            />
                             <span className="ml-2 text-sm">{option}</span>
                         </label>
                     )

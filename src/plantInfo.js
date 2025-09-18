@@ -9,6 +9,7 @@ const plantInfo = [
     waterRequirement: 'Water every 2–3 weeks, allow soil to dry',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Succulents & Cacti',
   },
   {
     id: '2',
@@ -20,6 +21,7 @@ const plantInfo = [
     waterRequirement: 'Keep soil slightly moist',
     careLevel: 'Moderate',
     availability: 'In Stock',
+    category: 'Flowering Plants',
   },
   {
     id: '3',
@@ -31,6 +33,7 @@ const plantInfo = [
     waterRequirement: 'Water 2–3 times a week',
     careLevel: 'Moderate',
     availability: 'In Stock',
+    category: 'Foliage Plants',
   },
   {
     id: '4',
@@ -42,6 +45,7 @@ const plantInfo = [
     waterRequirement: 'Once every 2–3 weeks',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Succulents & Cacti',
   },
   {
     id: '5',
@@ -53,6 +57,7 @@ const plantInfo = [
     waterRequirement: 'Once a week',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Succulents & Cacti',
   },
   {
     id: '6',
@@ -64,6 +69,7 @@ const plantInfo = [
     waterRequirement: 'Water every 2–3 weeks',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Succulents & Cacti',
   },
   {
     id: '7',
@@ -75,6 +81,7 @@ const plantInfo = [
     waterRequirement: 'Change water weekly or keep soil moist',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Miniature Plants',
   },
   {
     id: '8',
@@ -86,6 +93,7 @@ const plantInfo = [
     waterRequirement: 'Water once a week',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Climbers & Vines',
   },
   {
     id: '9',
@@ -97,6 +105,7 @@ const plantInfo = [
     waterRequirement: 'Water when soil is dry',
     careLevel: 'Moderate',
     availability: 'In Stock',
+    category: 'Flowering Plants',
   },
   {
     id: '10',
@@ -108,6 +117,7 @@ const plantInfo = [
     waterRequirement: 'Once a week',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Climbers & Vines',
   },
   {
     id: '11',
@@ -119,6 +129,7 @@ const plantInfo = [
     waterRequirement: 'Every 2–3 weeks',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Foliage Plants',
   },
   {
     id: '12',
@@ -130,6 +141,7 @@ const plantInfo = [
     waterRequirement: 'Keep soil slightly moist',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Foliage Plants',
   },
   {
     id: '13',
@@ -141,6 +153,7 @@ const plantInfo = [
     waterRequirement: 'Every 2–3 weeks',
     careLevel: 'Easy',
     availability: 'In Stock',
+    category: 'Miniature Plants',
   },
 ]
 

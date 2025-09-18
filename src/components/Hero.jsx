@@ -1,6 +1,7 @@
 import React from 'react'
 import { GoArrowRight } from 'react-icons/go'
 import { PiPhoneCallThin } from 'react-icons/pi'
+import { Link } from 'react-router-dom'
 
 const Hero = () => {
   return (
@@ -17,12 +18,14 @@ const Hero = () => {
             with eco-friendly packaging.
           </p>
           <div className="flex flex-wrap gap-4 sm:gap-6 mt-8 items-center">
-            <button className="flex items-center px-6 py-3 text-sm sm:text-base bg-brand-primary hover:bg-brand-primary-dark hover:scale-105 transition duration-500 text-brand-accent rounded-full cursor-pointer">
-              Explore Now
-              <div className="pl-2">
-                <GoArrowRight />
-              </div>
-            </button>
+            <Link to="/shop">
+              <button className="flex items-center px-6 py-3 text-sm sm:text-base bg-brand-primary hover:bg-brand-primary-dark hover:scale-105 transition duration-500 text-brand-accent rounded-full cursor-pointer">
+                Explore Now
+                <div className="pl-2">
+                  <GoArrowRight />
+                </div>
+              </button>
+            </Link>
             <div className="flex items-center">
               <div className="w-10 h-10 bg-brand-primary-light rounded-full flex items-center justify-center">
                 <PiPhoneCallThin size={20} />
