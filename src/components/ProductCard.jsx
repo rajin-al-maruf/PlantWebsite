@@ -7,7 +7,7 @@ const ProductCard = ({id,name,price,plantImg}) => {
 const [isWished, setIsWished] = useState(false)
   return (
     <Link to={`/product/${id}`}>
-        <div className='w-full h-full bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer hover:shadow-xl hover:scale-101 duration-300'>
+        <div className='w-full bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer hover:shadow-xl hover:scale-101 duration-300'>
             <div className='p-2 md:p-4'>
                 <div className='w-full h-full overflow-hidden flex items-center justify-center bg-neutral-100 relative'>
                     <div className='w-full absolute top-0 flex items-center justify-between'>

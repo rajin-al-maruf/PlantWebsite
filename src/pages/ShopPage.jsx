@@ -15,13 +15,14 @@ const ShopPage = () => {
     lightrequirement: [],
     availability: [],
   })
+  const [tempFilter, setTempFilter] = useState(filter)
   
   // console.log(filter[filterInfo[0].id])
 
   useEffect(() => {
     const fetchPlants = async () => {
       try {
-        let plantData = supabase.from('plants').select('*');
+        let plantData = supabase.from('plants').select('*')
 
         if(filter.category.length > 0){
           plantData = plantData.in("category", filter.category)
@@ -50,16 +51,20 @@ const ShopPage = () => {
     }
     fetchPlants()
   },[filter])
+  
 
 
-  const [showFilters, setShowFilters] = useState(false)
+  const [showFilters, setShowFilters] = useState(true)
   
   return (
     <div className='max-w-7xl mx-auto mt-35 px-4 md:px-6 lg:px-8 xl:px-0'>
       <div className='w-full flex items-center justify-between'>
-        <div className='flex gap-2 items-center'>
+        <div className='hidden md:block'>
+          Filters
+        </div>
+        <div className='flex gap-2 items-center md:hidden'>
           <p>Filter:</p>
-          <CiFilter onClick={() => setShowFilters(!showFilters)} size={30} className={showFilters? 'p-1 border border-neutral-200 rounded-md cursor-pointer': 'p-1 bg-neutral-200 border border-neutral-200 rounded-md cursor-pointer'}/>
+          <CiFilter onClick={() => setShowFilters(!showFilters)} size={30} className={showFilters? 'p-1 bg-neutral-200 border border-neutral-200 rounded-md cursor-pointer': 'p-1 border border-neutral-200 rounded-md cursor-pointer'}/>
         </div> 
         <div className='flex items-center gap-4'>
           <p className='text-sm'>Sort by:</p>
@@ -71,7 +76,8 @@ const ShopPage = () => {
         </div>
       </div>
       <div className='md:grid grid-cols-4 gap-10 mt-6'>
-        <div className={showFilters ? 'hidden' : ''}>
+{/* filter for lg-screen */}
+        <div className="hidden md:block">
           {filterInfo.map((filterInfo, index) => {
             return(
               <Filter
@@ -84,16 +90,52 @@ const ShopPage = () => {
               />
             )
           })}
-            <button className='w-full p-2 text-white text-sm bg-black mt-4 rounded-md cursor-pointer'>
-              Apply All
-            </button>
-            <button className='w-full text-sm py-4 underline cursor-pointer'>
-              Clear Filters
-            </button>
+          <button 
+              className='w-full text-sm py-4 underline cursor-pointer'
+              onClick={() => {
+                setFilter({ category: [], carelevel: [], lightrequirement: [], availability: [] })
+              }}
+              >
+                Clear Filters
+          </button>
         </div>
-        <div className={showFilters ? 
-            'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-8 col-span-4' : 
-            'grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'}>
+{/* filter for sm-screen */}
+        {showFilters && (
+          <div className='block md:hidden'>
+            {filterInfo.map((filterInfo, index) => {
+              return(
+                <Filter
+                  key={index}
+                  filterType={filterInfo.id}
+                  title={filterInfo.title}
+                  options={filterInfo.options}
+                  filter={tempFilter}
+                  setFilter={setTempFilter}
+                />
+              )
+            })}
+              <button
+              className='w-full p-2 text-white text-sm bg-black mt-4 rounded-md cursor-pointer'
+              onClick={() => {
+                  setFilter(tempFilter)
+                  setShowFilters(false)
+              }}
+              >
+                Apply All
+              </button>
+              <button 
+              className='w-full text-sm py-4 underline cursor-pointer'
+              onClick={() => {
+                setFilter({ category: [], carelevel: [], lightrequirement: [], availability: [] })
+              }}
+              >
+                Clear Filters
+              </button>
+          </div>
+        )}
+{/* product cards */}
+        {plants.length > 0 ?
+        <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'>
           {plants.map((plant, index) => {
             return(
               <ProductCard
@@ -105,7 +147,11 @@ const ShopPage = () => {
               />
             )
           })}
+        </div>:
+        <div className='w-full mt-20 flex justify-center text-2xl text-neutral-600 col-span-3'>
+          <h2>NO PRODUCT FOUND</h2>
         </div>
+        }
       </div>
     </div>
   )

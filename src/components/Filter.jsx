@@ -45,7 +45,7 @@ const Filter = ({id, title, options, filter, setFilter, filterType}) => {
                                 type="checkbox" 
                                 className="rounded-md size-4 accent-brand-primary" 
                                 onChange={() => handleCheckboxChange(filterType, option)}
-                                // checked={filter.category.includes(option)}
+                                checked={filter[filterType].includes(option)}
                             />
                             <span className="ml-2 text-sm">{option}</span>
                         </label>
