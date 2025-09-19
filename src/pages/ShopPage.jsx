@@ -15,6 +15,7 @@ const ShopPage = () => {
     lightrequirement: [],
     availability: [],
   })
+  const [sortBy, setSortBy] = useState("newest")
   const [tempFilter, setTempFilter] = useState(filter)
   
   // console.log(filter[filterInfo[0].id])
@@ -37,6 +38,16 @@ const ShopPage = () => {
           plantData = plantData.in("availability", filter.availability)
         }
 
+        if(sortBy === "newest"){
+          plantData = plantData.order("id", {ascending: true})
+        }
+        if(sortBy === "low-to-high"){
+          plantData = plantData.order("price", {ascending: true})
+        }
+        if(sortBy === "high-to-low"){
+          plantData = plantData.order("price", {ascending: false})
+        }
+
         const {data, error} = await plantData;
 
         if(error){
@@ -50,7 +61,7 @@ const ShopPage = () => {
       }
     }
     fetchPlants()
-  },[filter])
+  },[filter, sortBy])
   
 
 
@@ -68,7 +79,11 @@ const ShopPage = () => {
         </div> 
         <div className='flex items-center gap-4'>
           <p className='text-sm'>Sort by:</p>
-          <select className='px-2 py-1 text-sm border border-neutral-200 rounded-full outline-none'>
+          <select 
+            className='px-2 py-1 text-sm border border-neutral-200 rounded-full outline-none'
+            value={sortBy}
+            onChange={(e) => {setSortBy(e.target.value)}}
+          >
             <option value="newest">Newest</option>
             <option value="low-to-high">Price(Low to High)</option>
             <option value="high-to-low">Price(High to Low)</option>
