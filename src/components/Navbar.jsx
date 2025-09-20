@@ -6,12 +6,13 @@ import { HiOutlineMenuAlt2 } from 'react-icons/hi'
 import { IoCloseOutline } from 'react-icons/io5'
 import { Link } from 'react-router-dom'
 import useCartStore from '../store/cartStore'
+import useWishlistStore from '../store/wishlistStore'
 
 const Navbar = () => {
 
   const [nav, setNav] = useState(false)
   const cart = useCartStore((state) => state.cart)
-  console.log(nav)
+  const wishlist = useWishlistStore((state) => state.wishlist)
 
   return (
     <nav className='absolute top-0 w-full z-50 mt-4 px-4 md:px-6 lg:px-8 xl:px-0'>
@@ -27,7 +28,7 @@ const Navbar = () => {
             <div className='flex gap-2'>
               <Link to="/cart">
                 <button className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-                  <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>5</div>
+                  <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{cart.length}</div>
                   <PiShoppingCartSimpleLight size={20}/>
                 </button>
               </Link>
@@ -86,7 +87,7 @@ const Navbar = () => {
           </button>
           <Link to="/wishlist">
             <button className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-              <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>232</div>
+              <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{wishlist.length}</div>
                 <CiHeart size={20}/>
             </button>
           </Link>

@@ -2,11 +2,23 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PiHeartStraightFill, PiHeartStraightLight } from 'react-icons/pi'
 import useCartStore from '../store/cartStore'
+import useWishlistStore from '../store/wishlistStore'
 
 const ProductCard = ({id,name,price,plantImg, availability, carelevel}) => {
 
 const [isWished, setIsWished] = useState(false)
 const addToCart = useCartStore((state) => state.addToCart)
+const wishlist = useWishlistStore((state) => state.wishlist)
+const addToWishlist = useWishlistStore((state) => state.addToWishlist)
+const removeFromWishlist = useWishlistStore((state) => state.removeFromWishlist)
+
+// const wished = () => {
+//     if(wishlist.find((item) => item.id === id)){
+//         return true
+//     }else{
+//         return false
+//     }
+// }
 
 return (
     <Link to={`/product/${id}`}>
@@ -22,6 +34,7 @@ return (
                                     e.stopPropagation();
                                     e.preventDefault();
                                     setIsWished(false)
+                                    removeFromWishlist(id)
                                 }}
                                 className='right-0 text-brand-primary hover:scale-110 duration-300'
                             /> : 
@@ -31,6 +44,7 @@ return (
                                     e.stopPropagation();
                                     e.preventDefault();
                                     setIsWished(true)
+                                    addToWishlist({id, name, price, plantImg})
                                 }}
                                 className='right-0 text-brand-primary hover:scale-110 duration-300'
                         /> }
