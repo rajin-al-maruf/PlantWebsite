@@ -1,28 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useCartStore from "../store/cartStore";
 
 const CartPage = () => {
 
-    const cartItem = [
-    {
-        id: "1",
-        name: "Aloe Vera",    
-        price: 250,
-        imgURL: "../src/assets/plants/aloevera.png",
-        quantity: 2,
-        careLevel: 'Easy',
-        availability: 'In Stock',
-    },
-    {
-        id: "3",
-        name: "Areca Palm",
-        price: 500,
-        imgURL: "../src/assets/plants/arecapalm.png",
-        quantity: 1,
-        careLevel: 'Moderate',
-        availability: 'In Stock',
-    },
-    ];
+    const cart = useCartStore((state) => state.cart)
     const [quantity, setQuantity] = useState(1)
 
     const increase = () => setQuantity(quantity + 1)
@@ -37,18 +19,18 @@ const CartPage = () => {
         <div className='mt-6 grid grid-cols-1 lg:grid-cols-3'>
             <div className='col-span-2 md:px-10'>
                 <h2 className='p-4 border-b border-neutral-300 text-lg font-medium'>Cart Items</h2>
-                {cartItem.map((items) => {
+                {cart.map((item) => {
                     return(
                         <div className='flex gap-4 p-4 border-t border-neutral-300'>
                             <img 
-                                src={items.imgURL} 
-                                alt={items.name}
+                                src={item.plantImg} 
+                                alt={item.name}
                                 className='w-20 sm:w-28 md:w-32 bg-neutral-100' />
                             <div className="w-full flex justify-between">
                                 <div>
-                                    <p className='font-medium'>{items.name}</p>
-                                    <p className='text-xs'>{items.availability}</p>
-                                    <p className='text-xs mt-2'>Care Level: {items.careLevel}</p>
+                                    <p className='font-medium'>{item.name}</p>
+                                    <p className='text-xs'>{item.availability}</p>
+                                    <p className='text-xs mt-2'>Care Level: {item.carelevel}</p>
                                     <div className="flex items-center gap-2 sm:gap-4 mt-2">
                                         <p className="text-sm">Quantity:</p>
                                         <button
@@ -67,7 +49,7 @@ const CartPage = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col justify-between items-end">
-                                    <p className="text-sm sm:text-base font-medium">Tk {items.price}</p>
+                                    <p className="text-sm sm:text-base font-medium">Tk {item.price}</p>
                                     <p className="text-xs underline cursor-pointer">remove</p>
                                 </div>
                             </div>

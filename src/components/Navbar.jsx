@@ -5,10 +5,12 @@ import { PiShoppingCartSimpleLight } from 'react-icons/pi'
 import { HiOutlineMenuAlt2 } from 'react-icons/hi'
 import { IoCloseOutline } from 'react-icons/io5'
 import { Link } from 'react-router-dom'
+import useCartStore from '../store/cartStore'
 
 const Navbar = () => {
 
   const [nav, setNav] = useState(false)
+  const cart = useCartStore((state) => state.cart)
   console.log(nav)
 
   return (
@@ -84,13 +86,13 @@ const Navbar = () => {
           </button>
           <Link to="/wishlist">
             <button className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-              <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>234</div>
+              <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>232</div>
                 <CiHeart size={20}/>
             </button>
           </Link>
           <Link to="/cart">
             <button className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-              <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>5</div>
+              <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{cart.length}</div>
               <PiShoppingCartSimpleLight size={20}/>
             </button>
           </Link>
