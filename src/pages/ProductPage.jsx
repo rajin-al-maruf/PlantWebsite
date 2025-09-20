@@ -94,14 +94,14 @@ const ProductPage = ({plants, setPlants}) => {
         <button
           className="w-full p-2 mt-6 bg-brand-primary hover:bg-brand-primary-dark duration-300 text-xs md:text-sm text-neutral-100 rounded-md cursor-pointer active:scale-95"
           onClick={(e) => {
-            addToCart({id: product.id, name: product.name, price: product.price, plantImg: product.imgurl, availability: product.availability, carelevel: product.carelevel})
+            addToCart({id: product.id, name: product.name, price: product.price, imgurl: product.imgurl, availability: product.availability, carelevel: product.carelevel})
           }}
         >
           ADD TO CART
         </button>
         <button
         onClick={(e) => {
-          addToWishlist({id: product.id, name: product.name, price: product.price, plantImg: product.imgurl})
+          addToWishlist({id: product.id, name: product.name, price: product.price, imgurl: product.imgurl})
         }}
           className="w-full p-2 mt-2 text-brand-primary hover:text-neutral-100 border-2 border-brand-primary hover:bg-brand-primary duration-300 text-xs md:text-sm rounded-md cursor-pointer active:scale-95"
         >

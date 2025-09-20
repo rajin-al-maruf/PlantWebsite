@@ -16,7 +16,7 @@ const WishlistPage = () => {
                     id={plantInfo.id}
                     name={plantInfo.name}
                     price={plantInfo.price}
-                    plantImg={plantInfo.plantImg}
+                    imgurl={plantInfo.imgurl}
                 />
                 )
             })}

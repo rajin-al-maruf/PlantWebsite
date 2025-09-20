@@ -4,7 +4,7 @@ import { PiHeartStraightFill, PiHeartStraightLight } from 'react-icons/pi'
 import useCartStore from '../store/cartStore'
 import useWishlistStore from '../store/wishlistStore'
 
-const ProductCard = ({id,name,price,plantImg, availability, carelevel}) => {
+const ProductCard = ({id,name,price,imgurl, availability, carelevel}) => {
 
 const [isWished, setIsWished] = useState(false)
 const addToCart = useCartStore((state) => state.addToCart)
@@ -44,12 +44,12 @@ return (
                                     e.stopPropagation();
                                     e.preventDefault();
                                     setIsWished(true)
-                                    addToWishlist({id, name, price, plantImg})
+                                    addToWishlist({id, name, price, imgurl})
                                 }}
                                 className='right-0 text-brand-primary hover:scale-110 duration-300'
                         /> }
                     </div>
-                    <img src={plantImg} alt="alovera_plant" className='object-cover'/>
+                    <img src={imgurl} alt="alovera_plant" className='object-cover'/>
                 </div>
                 <div className='p-2 border-t border-neutral-300 text-center'>
                     <h3 className='font-semibold text-xs md:text-sm'>{name}</h3>
@@ -58,7 +58,7 @@ return (
                         onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
-                            addToCart({id, name, price, plantImg, availability, carelevel})
+                            addToCart({id, name, price, imgurl, availability, carelevel})
                         }}
                         className='w-full p-2 mt-2 bg-brand-primary hover:bg-brand-primary-dark active:scale-95 duration-300 text-xs md:text-sm text-neutral-100 rounded-md cursor-pointer'
                     >

@@ -157,7 +157,7 @@ const ShopPage = ({plants, setPlants}) => {
                 id={plant.id}
                 name={plant.name}
                 price={plant.price}
-                plantImg={plant.imgurl}
+                imgurl={plant.imgurl}
                 availability={plant.availability}
                 carelevel={plant.carelevel}
               />

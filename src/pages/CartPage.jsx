@@ -23,7 +23,7 @@ const CartPage = () => {
                     return(
                         <div className='flex gap-4 p-4 border-t border-neutral-300'>
                             <img 
-                                src={item.plantImg} 
+                                src={item.imgurl} 
                                 alt={item.name}
                                 className='w-20 sm:w-28 md:w-32 bg-neutral-100' />
                             <div className="w-full flex justify-between">
