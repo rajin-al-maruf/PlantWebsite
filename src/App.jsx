@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Routes, Route } from "react-router-dom"
 import PageLayout from "./PageLayout/PageLayout"
 import HomePage from "./pages/HomePage"
@@ -10,12 +11,13 @@ import CheckoutPage from "./pages/CheckoutPage"
 
 function App() {
 
+  const [plants, setPlants] = useState([])
   return (
     <Routes>
       <Route path="/" element={<PageLayout />}>
         <Route index element={<HomePage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/shop" element={<ShopPage plants={plants} setPlants={setPlants}/>} />
+        <Route path="/product/:id" element={<ProductPage plants={plants} setPlants={setPlants}/>} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />

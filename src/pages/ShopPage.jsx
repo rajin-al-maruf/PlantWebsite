@@ -6,9 +6,8 @@ import filterInfo from '../filterInfo'
 import { supabase } from '../supabase'
 
 
-const ShopPage = () => {
+const ShopPage = ({plants, setPlants}) => {
 
-  const [plants, setPlants] = useState([])
   const [filter, setFilter] = useState({
     category: [],
     carelevel: [],

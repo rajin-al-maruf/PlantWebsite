@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import plantInfo from '../plantInfo'
 import { IoIosArrowDown } from 'react-icons/io'
+import useCartStore from '../store/cartStore'
+import useWishlistStore from '../store/wishlistStore'
 
-const ProductPage = () => {
+const ProductPage = ({plants, setPlants}) => {
+
   const { id } = useParams()
-  const product = plantInfo.find((p) => p.id.toString() === id)
+  const product = plants.find((p) => p.id.toString() === id)
+  const addToCart = useCartStore((state) => state.addToCart)
+  const addToWishlist = useWishlistStore((state) => state.addToWishlist)
   
 
   const [quantity, setQuantity] = useState(1)
@@ -27,7 +31,7 @@ const ProductPage = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 max-w-7xl mx-auto gap-10 mt-36 px-4 md:px-6 lg:px-8 xl:px-0">
       <div>
         <img
-          src={product.imgURL}
+          src={product.imgurl}
           alt={product.name}
           className="w-full bg-neutral-100 rounded-lg"
         />
@@ -87,10 +91,20 @@ const ProductPage = () => {
             }
           </div>
         </div>
-        <button className="w-full p-2 mt-6 bg-brand-primary hover:bg-brand-primary-dark duration-300 text-xs md:text-sm text-neutral-100 rounded-md cursor-pointer">
+        <button
+          className="w-full p-2 mt-6 bg-brand-primary hover:bg-brand-primary-dark duration-300 text-xs md:text-sm text-neutral-100 rounded-md cursor-pointer active:scale-95"
+          onClick={(e) => {
+            addToCart({id: product.id, name: product.name, price: product.price, plantImg: product.imgurl, availability: product.availability, carelevel: product.carelevel})
+          }}
+        >
           ADD TO CART
         </button>
-        <button className="w-full p-2 mt-2 text-brand-primary hover:text-neutral-100 border-2 border-brand-primary hover:bg-brand-primary duration-300 text-xs md:text-sm rounded-md cursor-pointer">
+        <button
+        onClick={(e) => {
+          addToWishlist({id: product.id, name: product.name, price: product.price, plantImg: product.imgurl})
+        }}
+          className="w-full p-2 mt-2 text-brand-primary hover:text-neutral-100 border-2 border-brand-primary hover:bg-brand-primary duration-300 text-xs md:text-sm rounded-md cursor-pointer active:scale-95"
+        >
           ADD TO WISHLIST
         </button>
       </div>
