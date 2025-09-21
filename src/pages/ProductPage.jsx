@@ -10,15 +10,8 @@ const ProductPage = ({plants, setPlants}) => {
   const product = plants.find((p) => p.id.toString() === id)
   const addToCart = useCartStore((state) => state.addToCart)
   const addToWishlist = useWishlistStore((state) => state.addToWishlist)
-  
 
-  const [quantity, setQuantity] = useState(1)
-
-  const increase = () => setQuantity(quantity + 1)
-  const decrease = () => {
-    if (quantity > 1) setQuantity(quantity - 1)
-  }
-
+  const [qty, setQty] = useState(1);
   const [showDescription, setShowDescription] = useState(false);
   const [showCare, setShowCare] = useState(false);
 
@@ -44,14 +37,14 @@ const ProductPage = ({plants, setPlants}) => {
         <div className="flex items-center gap-4 mt-6">
           <p className='font-semibold'>Quantity</p>
           <button
-            onClick={decrease}
+            onClick={() => setQty(Math.max(1, qty - 1))}
             className="w-8 h-8 flex items-center justify-center border border-neutral-300 rounded-md text-lg cursor-pointer"
           >
             –
           </button>
-          <span className="text-lg font-medium">{quantity}</span>
+          <span className="text-lg font-medium">{qty}</span>
           <button
-            onClick={increase}
+            onClick={() => setQty(qty + 1)}
             className="w-8 h-8 flex items-center justify-center border border-neutral-300 rounded-md text-lg cursor-pointer"
           >
             +
@@ -94,7 +87,7 @@ const ProductPage = ({plants, setPlants}) => {
         <button
           className="w-full p-2 mt-6 bg-brand-primary hover:bg-brand-primary-dark duration-300 text-xs md:text-sm text-neutral-100 rounded-md cursor-pointer active:scale-95"
           onClick={(e) => {
-            addToCart({id: product.id, name: product.name, price: product.price, imgurl: product.imgurl, availability: product.availability, carelevel: product.carelevel})
+            addToCart({id: product.id, name: product.name, price: product.price, imgurl: product.imgurl, availability: product.availability, carelevel: product.carelevel}, qty)
           }}
         >
           ADD TO CART

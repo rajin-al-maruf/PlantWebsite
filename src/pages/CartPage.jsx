@@ -7,22 +7,13 @@ const CartPage = () => {
     const cart = useCartStore((state) => state.cart)
     const removeFromCart = useCartStore((state) => state.removeFromCart)
     const clearCart = useCartStore((state) => state.clearCart)
-    const [quantity, setQuantity] = useState(1)
+    const increaseQuantity = useCartStore((state) => state.increaseQuantity)
+    const decreaseQuantity = useCartStore((state) => state.decreaseQuantity)
 
-    const increase = () => setQuantity(quantity + 1)
-    const decrease = () => {
-        if (quantity > 1) setQuantity(quantity - 1)
-    }
-
-    let subtotal = 0;
-    const calSubtotal = () => {
-        for (let index = 0; index < cart.length; index++) {
-               subtotal = subtotal+cart[index].price
-        }
-    }
-    calSubtotal();
-    const shipping = 100;
-    let total = subtotal+shipping;
+    const noOfItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+    const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const shipping = subtotal > 0 ? 80 : 0;
+    const total = subtotal + shipping;
     
   return (
     <div className='max-w-7xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0'>
@@ -33,7 +24,7 @@ const CartPage = () => {
                 <h2 className='p-4 border-b border-neutral-300 text-lg font-medium'>Cart Items</h2>
                 {cart.map((item, index) => {
                     return(
-                        <div key={index} className='flex gap-4 p-4 border-t border-neutral-300'>
+                        <div key={index} className='flex gap-4 p-4 border-b border-neutral-300'>
                             <Link to={`/product/${item.id}`}>
                                 <img 
                                     src={item.imgurl} 
@@ -49,14 +40,14 @@ const CartPage = () => {
                                     <div className="flex items-center gap-2 sm:gap-4 mt-2">
                                         <p className="text-sm">Quantity:</p>
                                         <button
-                                            onClick={decrease}
+                                        onClick={() => {decreaseQuantity(item.id)}}
                                             className="w-6 h-6 flex items-center justify-center border border-neutral-300 rounded-md text-lg cursor-pointer"
                                         >
                                             –
                                         </button>
-                                        <span className="font-medium">{quantity}</span>
+                                        <span className="font-medium">{item.quantity}</span>
                                         <button
-                                            onClick={increase}
+                                            onClick={() => {increaseQuantity(item.id)}}
                                             className="w-6 h-6 flex items-center justify-center border border-neutral-300 rounded-md text-lg cursor-pointer"
                                         >
                                             +
@@ -77,12 +68,19 @@ const CartPage = () => {
                         </div>
                     )
                 })}
-                {cart.lenght>0 &&
-                    <button 
-                        onClick={() => clearCart()}
-                        className="text-xs underline cursor-pointer">
-                        Clear Cart
-                    </button>
+                {cart.length>0 &&
+                    <div className="mt-4 p-4 flex items-center justify-between">
+                        <button 
+                            onClick={() => clearCart()}
+                            className="text-xs p-2 bg-black text-white rounded-md hover:bg-red-600 duration-300 cursor-pointer">
+                            Clear Cart
+                        </button>
+                        <Link to="/shop">
+                            <button className="text-xs p-2 bg-black text-white rounded-md hover:bg-brand-primary duration-300 cursor-pointer">
+                                Continue Shopping
+                            </button>
+                        </Link>
+                    </div>
                 }
             </div>
 
@@ -91,7 +89,7 @@ const CartPage = () => {
                 <div className='p-4 border-b border-neutral-300'>
                     <div className="flex justify-between text-sm">
                         <p>Number of Items</p>
-                        <p>{cart.length}</p>
+                        <p>{noOfItems}</p>
                     </div>
                     <div className="flex justify-between text-sm pt-2">
                         <p>Subtotal</p>
@@ -101,10 +99,6 @@ const CartPage = () => {
                         <p>Shipping</p>
                         <p>Tk {shipping}</p>
                     </div>
-                    {/* <div className="flex justify-between text-sm pt-2">
-                        <p>VAT</p>
-                        <p>Tk 33.84</p>
-                    </div> */}
                 </div>
                 <div className="flex justify-between text-sm font-medium p-4 border-b border-neutral-300">
                     <p>Total</p>
