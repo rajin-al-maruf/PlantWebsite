@@ -8,7 +8,6 @@ const ProductCard = ({id,name,price,imgurl, availability, carelevel}) => {
 
 const [isWished, setIsWished] = useState(false)
 const addToCart = useCartStore((state) => state.addToCart)
-const wishlist = useWishlistStore((state) => state.wishlist)
 const addToWishlist = useWishlistStore((state) => state.addToWishlist)
 const removeFromWishlist = useWishlistStore((state) => state.removeFromWishlist)
 
@@ -21,6 +20,7 @@ const removeFromWishlist = useWishlistStore((state) => state.removeFromWishlist)
 // }
 
 return (
+    // when we click in the card it will go to the product page ex: /product/1
     <Link to={`/product/${id}`}>
         <div className='w-full bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer hover:shadow-xl hover:scale-101 duration-300'>
             <div className='p-2 md:p-4'>

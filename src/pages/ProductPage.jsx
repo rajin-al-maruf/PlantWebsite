@@ -3,11 +3,28 @@ import { useParams } from 'react-router-dom'
 import { IoIosArrowDown } from 'react-icons/io'
 import useCartStore from '../store/cartStore'
 import useWishlistStore from '../store/wishlistStore'
+import { supabase } from '../supabase'
+import { useEffect } from 'react'
 
-const ProductPage = ({plants, setPlants}) => {
+const ProductPage = () => {
 
+  //it will get the id from the url ex: /product/1  then id=1
   const { id } = useParams()
-  const product = plants.find((p) => p.id.toString() === id)
+  const [product, setProduct] = useState();
+
+  //that retrived {id} will be used to fetch the product from the database whenever the id changes
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { data, error } = await supabase .from("plants").select("*").eq("id", id).single();
+
+      if (error) console.error(error);
+      else setProduct(data);
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  //get the function from the store
   const addToCart = useCartStore((state) => state.addToCart)
   const addToWishlist = useWishlistStore((state) => state.addToWishlist)
 

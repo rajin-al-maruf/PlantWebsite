@@ -1,6 +1,9 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const useWishlistStore = create((set) => ({
+const useWishlistStore = create(
+  persist(
+  (set) => ({
   wishlist: [],
   addToWishlist: (product) =>
     set((state) => {
@@ -9,6 +12,11 @@ const useWishlistStore = create((set) => ({
     }),
   removeFromWishlist: (id) =>
     set((state) => ({wishlist: state.wishlist.filter((item) => item.id !== id)})),
-}));
+})
+  , {
+    name: "wishlist-storage",
+  }
+  )
+);
 
 export default useWishlistStore;
