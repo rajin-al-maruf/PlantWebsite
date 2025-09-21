@@ -1,28 +1,13 @@
 import { Link } from "react-router-dom";
 import plantInfo from "../plantInfo";
+import useCartStore from "../store/cartStore";
 
 const CheckoutPage = () => {
 
-    const cartItem = [
-    {
-        id: "1",
-        name: "Aloe Vera",    
-        price: 250,
-        imgURL: "../src/assets/plants/aloevera.png",
-        quantity: 2,
-        careLevel: 'Easy',
-        availability: 'In Stock',
-    },
-    {
-        id: "3",
-        name: "Areca Palm",
-        price: 500,
-        imgURL: "../src/assets/plants/arecapalm.png",
-        quantity: 1,
-        careLevel: 'Moderate',
-        availability: 'In Stock',
-    },
-    ];
+    const cart = useCartStore((state) => state.cart)
+    const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const shipping = subtotal > 0 ? 80 : 0;
+    const total = subtotal + shipping;
     
   return (
     <div className='max-w-7xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0'>
@@ -53,11 +38,12 @@ const CheckoutPage = () => {
                             <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
                         </div>
                         <div className='w-full mt-6'>
-                            <label className='block text-sm font-medium mb-2'>Street Address <span className='text-red-600'>*</span></label>
+                            <label className='block text-sm font-medium mb-2'>Address <span className='text-red-600'>*</span></label>
                             <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
                             <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light mt-4'/>
                         </div>
-                        <div className='w-full mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6'>
+                        {/* I will add that functionality later */}
+                        {/* <div className='w-full mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6'>
                             <div>
                                 <label className='block text-sm font-medium mb-2'>Division <span className='text-red-600'>*</span></label>
                                 <select className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'>
@@ -80,7 +66,7 @@ const CheckoutPage = () => {
                                 <label className='block text-sm font-medium mb-2'>Postal Code <span className='text-red-600'>*</span></label>
                                 <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
                             </div>
-                        </div>
+                        </div> */}
                         
                         <div className="flex mt-10">
                             <input type="checkbox"/>
@@ -120,12 +106,12 @@ const CheckoutPage = () => {
                         </div>
 
                         <div>
-                            {cartItem.map((items) => {
+                            {cart.map((items) => {
                                 return(
                                     <div className='flex gap-4 px-2 py-4 border-t border-t-neutral-300'>
                                         <Link to={`/product/${plantInfo.id}`}>
                                             <img 
-                                                src={items.imgURL} 
+                                                src={items.imgurl} 
                                                 alt={items.name}
                                                 className='w-20 sm:w-28 md:w-32 bg-neutral-100'
                                             />
@@ -134,10 +120,10 @@ const CheckoutPage = () => {
                                             <div>
                                                 <p className='font-medium'>{items.name}</p>
                                                 <p className='text-xs mt-1 text-neutral-600'>Care Level: {items.careLevel}</p>
-                                                <p className="text-xs mt-1 text-neutral-600">Quantity: 1</p>
+                                                <p className="text-xs mt-1 text-neutral-600">Quantity: {items.quantity}</p>
                                             </div>
                                             <div className="flex flex-col justify-between items-end">
-                                                <p className="text-sm sm:text-base font-medium">Tk {items.price}</p>
+                                                <p className="text-sm sm:text-base font-medium">Tk {items.price * items.quantity}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -147,22 +133,18 @@ const CheckoutPage = () => {
 
                         <div className="flex items-center justify-between border-t border-t-neutral-300 p-2">
                             <p>Subtotal</p>
-                            <p className="font-medium">Tk 750</p>
+                            <p className="font-medium">Tk {subtotal}</p>
                         </div>
                         <div className="flex items-start justify-between border-t border-t-neutral-300 p-2">
                             <div className="w-[75%]">
                                 <p>Shipping</p>
                                 <p className="text-xs mt-2 text-neutral-600">Standard Shipping: within 3-4 days inside Dhaka, within 4-7 days outside Dhaka</p>
                             </div>
-                            <p className="font-medium">Tk 100</p>
-                        </div>
-                        <div className="flex items-center justify-between border-t border-t-neutral-300 p-2">
-                            <p>VAT</p>
-                            <p className="font-medium">Tk 33.83</p>
+                            <p className="font-medium">Tk {shipping}</p>
                         </div>
                         <div className="flex items-center justify-between p-2 bg-brand-accent">
                             <p className="font-medium">Total</p>
-                            <p className="font-medium">Tk 883.83</p>
+                            <p className="font-medium">Tk {total}</p>
                         </div>
                     </div>
                 </div>
