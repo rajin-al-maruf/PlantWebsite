@@ -24,7 +24,7 @@ return (
     <Link to={`/product/${id}`}>
         <div className='w-full bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer hover:shadow-xl hover:scale-101 duration-300'>
             <div className='p-2 md:p-4'>
-                <div className='w-full h-full overflow-hidden flex items-center justify-center bg-neutral-100 relative'>
+                <div className='w-full aspect-square overflow-hidden flex items-center justify-center bg-neutral-100 relative'>
                     <div className='w-full absolute top-0 flex items-center justify-between'>
                         <p className='left-0 text-xs bg-brand-primary text-neutral-100 px-2 rounded-md'>sale</p>
                         {isWished? 
@@ -49,7 +49,11 @@ return (
                                 className='right-0 text-brand-primary hover:scale-110 duration-300'
                         /> }
                     </div>
-                    <img src={imgurl} alt="alovera_plant" className='object-cover'/>
+                    <img 
+                        src={imgurl} 
+                        alt={name} 
+                        className='max-w-full max-h-full object-contain'
+                    />
                 </div>
                 <div className='p-2 border-t border-neutral-300 text-center'>
                     <h3 className='font-semibold text-xs md:text-sm'>{name}</h3>

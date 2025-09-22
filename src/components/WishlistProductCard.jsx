@@ -11,8 +11,12 @@ const WishlistProductCard = ({id,name,price,imgurl, availability, carelevel}) =>
     <Link to={`/product/${id}`}>
         <div className='w-full h-full bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer hover:shadow-sm'>
             <div className='p-2'>
-                <div className='w-full h-full overflow-hidden flex items-center justify-center bg-neutral-100 relative group'>
-                    <img src={imgurl} alt={name} className='object-cover'/>
+                <div className='w-full h-full aspect-square overflow-hidden flex items-center justify-center bg-neutral-100 relative group'>
+                    <img 
+                        src={imgurl} 
+                        alt={name} 
+                        className='max-w-full max-h-full object-contain'
+                    />
 
                     <div className="w-full h-full flex items-center justify-center bg-brand-primary/50 absolute top-0 left-0 rounded-md gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div 

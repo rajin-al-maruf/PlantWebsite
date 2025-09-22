@@ -39,11 +39,11 @@ const ProductPage = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 max-w-7xl mx-auto gap-10 mt-36 px-4 md:px-6 lg:px-8 xl:px-0">
-      <div>
+      <div className='w-full h-full aspect-square overflow-hidden flex items-center justify-center bg-neutral-100'>
         <img
           src={product.imgurl}
           alt={product.name}
-          className="w-full bg-neutral-100 rounded-lg"
+          className="max-w-full max-h-full object-contain rounded-lg"
         />
       </div>
 

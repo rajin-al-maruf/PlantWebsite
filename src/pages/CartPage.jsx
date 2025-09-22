@@ -26,11 +26,13 @@ const CartPage = () => {
                     return(
                         <div key={index} className='flex gap-4 p-4 border-b border-neutral-300'>
                             <Link to={`/product/${item.id}`}>
-                                <img 
-                                    src={item.imgurl} 
-                                    alt={item.name}
-                                    className='w-20 sm:w-28 md:w-32 bg-neutral-100' 
-                                />
+                                <div className="flex items-center justify-center aspect-square overflow-hidden">
+                                    <img 
+                                        src={item.imgurl} 
+                                        alt={item.name}
+                                        className='w-20 sm:w-28 md:w-32 max-w-full max-h-full object-contain bg-neutral-100' 
+                                    />
+                                </div>
                             </Link>
                             <div className="w-full flex justify-between">
                                 <div>
