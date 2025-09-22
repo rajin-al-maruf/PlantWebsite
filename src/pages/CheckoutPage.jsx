@@ -1,13 +1,110 @@
 import { Link } from "react-router-dom";
 import plantInfo from "../plantInfo";
 import useCartStore from "../store/cartStore";
+import { useState } from "react";
+import {supabase} from '../supabase'
 
 const CheckoutPage = () => {
 
+    const [form, setForm] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        address1: '',
+        address2: '',
+        paymentMethod: "cash",
+    })
+
+    const handleFormChange = (e) => {
+        setForm((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }))
+    }
+    // console.log(form);
+
     const cart = useCartStore((state) => state.cart)
+    const clearCart = useCartStore((state) => state.clearCart)
+
+    //calculate subtotal, shipping and total
     const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shipping = subtotal > 0 ? 80 : 0;
     const total = subtotal + shipping;
+
+    const placeOrder = async () => {
+        // Here you would typically send the order details to your backend server on click "PLACE ORDER"
+        try {
+            //1.push orderInfo to supabase table 'orders'
+            const { data: orderInfo, error: orderError } = await supabase
+                .from('orders')
+                .insert([
+                    {
+                        customer_name: form.firstName + ' ' + form.lastName,
+                        customer_email: form.email,
+                        customer_phone: form.phone,
+                        customer_address: form.address1 + ' ' + form.address2,
+                        total_amount: total,
+                        order_status: 'pending',
+                        payment_method: form.paymentMethod,
+                    }
+                ])
+                .select()
+                .single();
+
+            if (orderError) {
+                console.error('Error placing order:', orderError);
+                alert('There was an issue placing your order. Please try again.');
+            } else {
+                console.log('Order placed successfully:', orderInfo);
+                alert('Your order has been placed successfully!');
+            }
+
+            //2.push order items to supabase table 'order_items'
+
+            //get all the order items from cart
+            //map through the cart and create an array of order items
+            const orderItems = cart.map((item) => ({
+                order_id: orderInfo.id,
+                product_id: item.id,
+                quantity: item.quantity,
+                price: item.price,
+                subtotal: item.price * item.quantity,
+            }))
+
+            console.log(orderItems);
+            //insert order items to supabase
+            const { data: itemsData, error: itemsError } = await supabase
+                .from('order_items')
+                .insert(orderItems);
+
+            
+            if (itemsError) {
+                console.error('Error adding order items:', itemsError);
+            } else {
+                console.log('Order items added successfully:', itemsData);
+            }
+            
+            //3.clear the cart
+            clearCart();
+
+            //4.redirect to home page and clear the form
+            setForm({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                address1: '',
+                address2: '',
+                paymentMethod: "cash",
+            });
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Checkout failed:', error);
+            alert('An unexpected error occurred. Please try again.');
+        }
+
+    }
     
   return (
     <div className='max-w-7xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0'>
@@ -22,25 +119,55 @@ const CheckoutPage = () => {
                         <div className='sm:flex gap-6'>
                             <div className='w-full'>
                                 <label className='block text-sm font-medium mb-2'>First Name <span className='text-red-600'>*</span></label>
-                                <input type="text" className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                                <input 
+                                    type="text"
+                                    name="firstName"
+                                    value={form.firstName}
+                                    onChange={handleFormChange}
+                                    className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
                             </div>
                             <div className='w-full mt-6 sm:mt-0'>
                                 <label className='block text-sm font-medium mb-2'>Last Name <span className='text-red-600'>*</span></label>
-                                <input type="text" className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                                <input 
+                                    type="text"
+                                    name="lastName"
+                                    value={form.lastName}
+                                    onChange={handleFormChange}
+                                    className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
                             </div>
                         </div>
                         <div className='w-full mt-6'>
                             <label className='block text-sm font-medium mb-2'>Email Address <span className='text-red-600'>*</span></label>
-                            <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                            <input 
+                                type='email'
+                                name="email"
+                                value={form.email}
+                                onChange={handleFormChange}
+                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
                         </div>
                         <div className='w-full mt-6'>
-                            <label className='block text-sm font-medium mb-2'>Mobile Number <span className='text-red-600'>*</span></label>
-                            <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                            <label className='block text-sm font-medium mb-2'>Phone Number <span className='text-red-600'>*</span></label>
+                            <input 
+                                type='text'
+                                name="phone"
+                                value={form.phone}
+                                onChange={handleFormChange} 
+                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
                         </div>
                         <div className='w-full mt-6'>
                             <label className='block text-sm font-medium mb-2'>Address <span className='text-red-600'>*</span></label>
-                            <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
-                            <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light mt-4'/>
+                            <input 
+                                type='text'
+                                name="address1"
+                                value={form.address1}
+                                onChange={handleFormChange} 
+                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                            <input 
+                                type='text'
+                                name="address2"
+                                value={form.address2}
+                                onChange={handleFormChange} 
+                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light mt-4'/>
                         </div>
                         {/* I will add that functionality later */}
                         {/* <div className='w-full mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6'>
@@ -106,9 +233,9 @@ const CheckoutPage = () => {
                         </div>
 
                         <div>
-                            {cart.map((items) => {
+                            {cart.map((items, index) => {
                                 return(
-                                    <div className='flex gap-4 px-2 py-4 border-t border-t-neutral-300'>
+                                    <div key={index} className='flex gap-4 px-2 py-4 border-t border-t-neutral-300'>
                                         <Link to={`/product/${plantInfo.id}`}>
                                             <img 
                                                 src={items.imgurl} 
@@ -148,7 +275,9 @@ const CheckoutPage = () => {
                         </div>
                     </div>
                 </div>
-                <button className='w-full p-2 text-white text-sm bg-black hover:bg-brand-primary duration-200 cursor-pointer'>
+                <button 
+                    onClick={placeOrder}
+                    className='w-full p-2 text-white text-sm bg-black hover:bg-brand-primary duration-200 cursor-pointer'>
                     PLACE ORDER
                 </button>
             </div>
