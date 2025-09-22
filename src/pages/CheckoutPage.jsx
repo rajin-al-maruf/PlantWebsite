@@ -22,12 +22,10 @@ const CheckoutPage = () => {
             [e.target.name]: e.target.value
         }))
     }
-    // console.log(form);
 
     const cart = useCartStore((state) => state.cart)
     const clearCart = useCartStore((state) => state.clearCart)
 
-    //calculate subtotal, shipping and total
     const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shipping = subtotal > 0 ? 80 : 0;
     const total = subtotal + shipping;
@@ -62,8 +60,6 @@ const CheckoutPage = () => {
 
             //2.push order items to supabase table 'order_items'
 
-            //get all the order items from cart
-            //map through the cart and create an array of order items
             const orderItems = cart.map((item) => ({
                 order_id: orderInfo.id,
                 product_id: item.id,
@@ -72,8 +68,6 @@ const CheckoutPage = () => {
                 subtotal: item.price * item.quantity,
             }))
 
-            console.log(orderItems);
-            //insert order items to supabase
             const { data: itemsData, error: itemsError } = await supabase
                 .from('order_items')
                 .insert(orderItems);
