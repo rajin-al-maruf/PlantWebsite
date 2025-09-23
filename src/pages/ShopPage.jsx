@@ -4,9 +4,13 @@ import { CiFilter } from 'react-icons/ci'
 import Filter from '../components/Filter'
 import filterInfo from '../filterInfo'
 import { supabase } from '../supabase'
+import SkeletonCard from '../components/SkeletonCard'
+import Spinner from '../components/Spinner'
 
 
 const ShopPage = ({plants, setPlants}) => {
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const [filter, setFilter] = useState({
     category: [],
@@ -22,6 +26,7 @@ const ShopPage = ({plants, setPlants}) => {
   useEffect(() => {
     const fetchPlants = async () => {
       try {
+        setIsLoading(true)
         let plantData = supabase.from('plants').select('*')
 
         if(filter.category.length > 0){
@@ -57,14 +62,18 @@ const ShopPage = ({plants, setPlants}) => {
 
       } catch (error) {
         console.error("Unexpected error:", err);
+      }finally{
+        setIsLoading(false)
       }
     }
     fetchPlants()
   },[filter, sortBy])
-  
-
 
   const [showFilters, setShowFilters] = useState(true)
+
+  if (isLoading) {
+    return <Spinner />
+  }
   
   return (
     <div className='max-w-7xl mx-auto mt-35 px-4 md:px-6 lg:px-8 xl:px-0'>
@@ -148,10 +157,15 @@ const ShopPage = ({plants, setPlants}) => {
           </div>
         )}
 {/* product cards */}
-        {plants.length > 0 ?
-        <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'>
-          {plants.map((plant, index) => {
-            return(
+        {isLoading ? (
+          <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        ) : plants.length > 0 ? (
+          <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'>
+            {plants.map((plant, index) => (
               <ProductCard
                 key={index}
                 id={plant.id}
@@ -161,13 +175,14 @@ const ShopPage = ({plants, setPlants}) => {
                 availability={plant.availability}
                 carelevel={plant.carelevel}
               />
-            )
-          })}
-        </div>:
-        <div className='w-full mt-20 flex justify-center text-2xl text-neutral-600 col-span-3'>
-          <h2>NO PRODUCT FOUND</h2>
-        </div>
-        }
+            ))}
+          </div>
+        ) : (
+          <div className='w-full mt-20 flex justify-center text-2xl text-neutral-600 col-span-3'>
+            <h2>NO PRODUCT FOUND</h2>
+          </div>
+        )}
+
       </div>
     </div>
   )

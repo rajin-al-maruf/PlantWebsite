@@ -5,9 +5,11 @@ import useCartStore from '../store/cartStore'
 import useWishlistStore from '../store/wishlistStore'
 import { supabase } from '../supabase'
 import { useEffect } from 'react'
+import SkeletonCard from '../components/SkeletonCard'
 
 const ProductPage = () => {
 
+  const [isLoading, setIsLoading] = useState(false)
   //it will get the id from the url ex: /product/1  then id=1
   const { id } = useParams()
   const [product, setProduct] = useState();
@@ -15,10 +17,12 @@ const ProductPage = () => {
   //that retrived {id} will be used to fetch the product from the database whenever the id changes
   useEffect(() => {
     const fetchProduct = async () => {
+      setIsLoading(true)
       const { data, error } = await supabase .from("plants").select("*").eq("id", id).single();
 
       if (error) console.error(error);
       else setProduct(data);
+      setIsLoading(false)
     };
 
     fetchProduct();
@@ -27,12 +31,13 @@ const ProductPage = () => {
   //get the function from the store
   const addToCart = useCartStore((state) => state.addToCart)
   const addToWishlist = useWishlistStore((state) => state.addToWishlist)
-
   const [qty, setQty] = useState(1);
   const [showDescription, setShowDescription] = useState(false);
   const [showCare, setShowCare] = useState(false);
 
-
+  if (isLoading) {
+    return <SkeletonCard />;
+  }
   if (!product) {
     return <p>Product Not Found</p>
   }
