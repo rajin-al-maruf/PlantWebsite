@@ -6,15 +6,37 @@ import {supabase} from '../supabase'
 
 const CheckoutPage = () => {
 
+    const cart = useCartStore((state) => state.cart)
+    const clearCart = useCartStore((state) => state.clearCart)
+
+    const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const shipping = subtotal > 0 ? 80 : 0;
+    const total = subtotal + shipping;
+
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',
         email: '',
         phone: '',
-        address1: '',
-        address2: '',
-        paymentMethod: "cash",
+        address: '',
+        paymentMethod: '',
     })
+
+    const [error, setError] = useState({});
+
+    const validateForm = () => {
+        let tempError = {};
+
+        if(!form.firstName.trim()) tempError.firstName = "First Name is required";
+        if(!form.lastName.trim()) tempError.lastName = "Last Name is required";
+        if(!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) tempError.email = "Enter a valid email";
+        if(!form.phone.match(/^\d{11}$/)) tempError.phone = "Enter a valid phone number";
+        if(!form.address.trim()) tempError.address = "Address is required";
+
+        setError(tempError);
+
+        return Object.keys(tempError).length === 0;
+    }
 
     const handleFormChange = (e) => {
         setForm((prev) => ({
@@ -23,14 +45,12 @@ const CheckoutPage = () => {
         }))
     }
 
-    const cart = useCartStore((state) => state.cart)
-    const clearCart = useCartStore((state) => state.clearCart)
-
-    const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const shipping = subtotal > 0 ? 80 : 0;
-    const total = subtotal + shipping;
-
     const placeOrder = async () => {
+        if(cart.length === 0) {
+            alert('Your cart is empty. Please add items to your cart before placing an order.');
+            return;
+        }
+        if(!validateForm()) return;
         // Here you would typically send the order details to your backend server on click "PLACE ORDER"
         try {
             //1.push orderInfo to supabase table 'orders'
@@ -41,7 +61,7 @@ const CheckoutPage = () => {
                         customer_name: form.firstName + ' ' + form.lastName,
                         customer_email: form.email,
                         customer_phone: form.phone,
-                        customer_address: form.address1 + ' ' + form.address2,
+                        customer_address: form.address,
                         total_amount: total,
                         order_status: 'pending',
                         payment_method: form.paymentMethod,
@@ -88,11 +108,10 @@ const CheckoutPage = () => {
                 lastName: '',
                 email: '',
                 phone: '',
-                address1: '',
-                address2: '',
-                paymentMethod: "cash",
+                address: '',
+                paymentMethod: '',
             });
-            window.location.href = '/';
+            // window.location.href = '/';
         } catch (error) {
             console.error('Checkout failed:', error);
             alert('An unexpected error occurred. Please try again.');
@@ -118,7 +137,9 @@ const CheckoutPage = () => {
                                     name="firstName"
                                     value={form.firstName}
                                     onChange={handleFormChange}
-                                    className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                                    className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                                />
+                                {error.firstName && <p className="text-red-600 text-xs mt-1">{error.firstName}</p>}
                             </div>
                             <div className='w-full mt-6 sm:mt-0'>
                                 <label className='block text-sm font-medium mb-2'>Last Name <span className='text-red-600'>*</span></label>
@@ -127,7 +148,9 @@ const CheckoutPage = () => {
                                     name="lastName"
                                     value={form.lastName}
                                     onChange={handleFormChange}
-                                    className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                                    className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                                />
+                                {error.lastName && <p className="text-red-600 text-xs mt-1">{error.lastName}</p>}
                             </div>
                         </div>
                         <div className='w-full mt-6'>
@@ -137,7 +160,9 @@ const CheckoutPage = () => {
                                 name="email"
                                 value={form.email}
                                 onChange={handleFormChange}
-                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                            />
+                            {error.email && <p className="text-red-600 text-xs mt-1">{error.email}</p>}
                         </div>
                         <div className='w-full mt-6'>
                             <label className='block text-sm font-medium mb-2'>Phone Number <span className='text-red-600'>*</span></label>
@@ -146,22 +171,20 @@ const CheckoutPage = () => {
                                 name="phone"
                                 value={form.phone}
                                 onChange={handleFormChange} 
-                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
+                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                            />
+                            {error.phone && <p className="text-red-600 text-xs mt-1">{error.phone}</p>}
                         </div>
                         <div className='w-full mt-6'>
                             <label className='block text-sm font-medium mb-2'>Address <span className='text-red-600'>*</span></label>
                             <input 
                                 type='text'
-                                name="address1"
-                                value={form.address1}
+                                name="address"
+                                value={form.address}
                                 onChange={handleFormChange} 
-                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
-                            <input 
-                                type='text'
-                                name="address2"
-                                value={form.address2}
-                                onChange={handleFormChange} 
-                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light mt-4'/>
+                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                            />
+                            {error.address && <p className="text-red-600 text-xs mt-1">{error.address}</p>}
                         </div>
                         {/* I will add that functionality later */}
                         {/* <div className='w-full mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6'>
@@ -201,15 +224,37 @@ const CheckoutPage = () => {
 
                     <div className='px-4 py-6'>
                         <div className="flex items-center">
-                            <input type="radio" className="h-4 w-4"/>
-                            <label className="pl-2 text-neutral-600 text-sm">Debit/Credit cards and mobile money</label>
-                        </div>
-                        <div className="flex items-center mt-4">
-                            <input type="radio" className="h-4 w-4"/>
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="cards"
+                                checked={form.paymentMethod === 'cards'}
+                                onChange={handleFormChange}
+                            />
+                            <label className="pl-2 text-neutral-600 text-sm">
+                                Debit/Credit cards and mobile money
+                            </label>
+                            </div>
+
+                            <div className="flex items-center mt-4">
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="mobileBanking"
+                                checked={form.paymentMethod === 'mobileBanking'}
+                                onChange={handleFormChange}
+                            />
                             <label className="pl-2 text-neutral-600 text-sm">Mobile Banking</label>
-                        </div>
-                        <div className="flex items-center mt-4">
-                            <input type="radio" className="h-4 w-4"/>
+                            </div>
+
+                            <div className="flex items-center mt-4">
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="cod"
+                                checked={form.paymentMethod === 'cod'}
+                                onChange={handleFormChange}
+                            />
                             <label className="pl-2 text-neutral-600 text-sm">Cash on delivery</label>
                         </div>
                     </div>
