@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import Category from '../components/Category'
-import FeaturedProducts from '../components/FeaturedProducts'
 import Hero from '../components/Hero'
 import Spinner from '../components/Spinner'
+import PopularProducts from '../components/PopularProducts'
 
 const HomePage = ({plants, setPlants}) => {
 
@@ -32,7 +32,9 @@ const HomePage = ({plants, setPlants}) => {
         <Category 
           plants={plants}
         />
-        <FeaturedProducts />
+        <PopularProducts 
+          plants={plants}
+        />
     </div>
   )
 }
