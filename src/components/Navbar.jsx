@@ -85,7 +85,7 @@ const Navbar = () => {
 
       {/* Top Navbar for md and larger screens */}
       <div 
-        className={`max-w-7xl mx-auto hidden md:block fixed left-0 right-0 z-50 md:px-6 lg:px-8 xl:px-0 transition-transform duration-300 
+        className={`max-w-6xl 2xl:max-w-7xl mx-auto hidden md:block fixed left-0 right-0 z-50 md:px-6 lg:px-8 xl:px-0 transition-transform duration-300 
         ${showTopNav ? "top-4 translate-y-0" : "top-0 -translate-y-full"}`}
       >
 

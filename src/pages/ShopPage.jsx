@@ -76,7 +76,7 @@ const ShopPage = ({plants, setPlants}) => {
   }
   
   return (
-    <div className='max-w-7xl mx-auto mt-35 px-4 md:px-6 lg:px-8 xl:px-0'>
+    <div className='max-w-6xl 2xl:max-w-7xl mx-auto mt-35 px-4 md:px-6 lg:px-8 xl:px-0'>
       <div className='w-full flex items-center justify-between'>
         <div className='hidden md:block'>
           Filters

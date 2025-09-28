@@ -16,7 +16,7 @@ const CartPage = () => {
     const total = subtotal + shipping;
     
   return (
-    <div className='max-w-7xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0'>
+    <div className='max-w-6xl 2xl:max-w-7xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0'>
         <h1 className='text-2xl text-center border-b border-neutral-300 pb-2'>Cart Summary</h1>
 
         <div className='mt-6 grid grid-cols-1 lg:grid-cols-3'>

@@ -15,7 +15,7 @@ const Hero = () => {
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/0 z-10" />
       
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 xl:px-0 relative z-20 h-full flex items-center">
+      <div className="max-w-6xl 2xl:max-w-7xl mx-auto px-4 md:px-6 lg:px-8 xl:px-0 relative z-20 h-full flex items-center">
         <div className='sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-4xl'>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-brand-accent">
             Your Green Corner Starts Here

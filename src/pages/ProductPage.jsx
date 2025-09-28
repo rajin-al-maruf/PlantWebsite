@@ -43,7 +43,7 @@ const ProductPage = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 max-w-7xl mx-auto gap-10 mt-36 px-4 md:px-6 lg:px-8 xl:px-0">
+    <div className="max-w-6xl 2xl:max-w-7xl grid grid-cols-1 md:grid-cols-2 mx-auto gap-10 mt-36 px-4 md:px-6 lg:px-8 xl:px-0">
       <div className='w-full h-full aspect-square overflow-hidden flex items-center justify-center bg-neutral-100'>
         <img
           src={product.imgurl}
