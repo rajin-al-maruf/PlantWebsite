@@ -1,4 +1,6 @@
 import ProductCard from "./ProductCard"
+import { GoArrowRight } from "react-icons/go"
+import { Link } from "react-router-dom"
 
 const PopularProducts = ({plants}) => {
   return (
@@ -20,6 +22,14 @@ const PopularProducts = ({plants}) => {
               />
             ))}
         </div>
+        <Link to="/shop">
+          <button className="mt-8 flex items-center border border-brand-primary hover:bg-brand-primary hover:text-brand-accent duration-300 text-sm px-4 py-2 rounded-full cursor-pointer">
+            View More Product
+            <div className="pl-2">
+              <GoArrowRight />
+            </div>
+          </button>
+        </Link>
     </div>
   )
 }
