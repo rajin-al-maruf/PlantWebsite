@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import logo from '../assets/BonomayaLogo.jpg'
 import { CiHeart, CiSearch, CiUser } from 'react-icons/ci'
 import { PiShoppingCartSimpleLight } from 'react-icons/pi'
@@ -10,18 +10,38 @@ import useWishlistStore from '../store/wishlistStore'
 
 const Navbar = () => {
 
-  const [nav, setNav] = useState(false)
+  // Hide on scroll down, show on scroll up for top navbar
+  const [showTopNav, setShowTopNav] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        // scrolling down
+        setShowTopNav(false)
+      } else {
+        // scrolling up
+        setShowTopNav(true)
+      }
+      setLastScrollY(window.scrollY)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [lastScrollY])
+
+  const [showSideNav, setShowSideNav] = useState(false)
   const cart = useCartStore((state) => state.cart)
   const wishlist = useWishlistStore((state) => state.wishlist)
 
   return (
-    <nav className='absolute top-0 w-full z-50 mt-4 px-4 md:px-6 lg:px-8 xl:px-0'>
+    <nav className='absolute w-full z-50 top-0 left-0'>
 
-          <div className='block sm:hidden'>
+      {/* Mobile Navbar for smaller than md screens */}
+          <div className='block mt-4 md:hidden px-4'>
           <div className='flex items-center justify-between'>
             <button 
-              onClick={() => setNav(true)}
-              className='cursor-pointer'
+              onClick={() => setShowSideNav(true)}
+              className='cursor-pointer text-brand-accent'
             >
               <HiOutlineMenuAlt2 size={20} />
             </button>
@@ -37,13 +57,13 @@ const Navbar = () => {
               </button>
             </div>
           </div>
-          <div className={nav?
-                  'fixed w-full h-screen top-0 left-0 p-4 bg-brand-primary-light ease-in-out duration-500 z-50'
+          <div className={showSideNav?
+                  'fixed w-[80%] h-screen top-0 left-0 p-4 bg-brand-primary-light ease-in-out duration-500 z-50'
                 : 'fixed top-0 -left-full w-full h-screen p-4 bg-brand-primary-light ease-in-out duration-500 z-50'
             }
           >
           <button
-            onClick={() => setNav(false)}
+            onClick={() => setShowSideNav(false)}
             className="absolute top-4 right-6 hover:text-brand-accent cursor-pointer"
           >
             <IoCloseOutline size={28} />
@@ -63,43 +83,48 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Top Navbar for md and larger screens */}
+      <div 
+        className={`max-w-7xl mx-auto hidden md:block fixed left-0 right-0 z-50 md:px-6 lg:px-8 xl:px-0 transition-transform duration-300 
+        ${showTopNav ? "top-4 translate-y-0" : "top-0 -translate-y-full"}`}
+      >
 
-      <div className='max-w-7xl mx-auto sm:flex items-center justify-between hidden'>
+        <div className='bg-brand-accent/30 backdrop-blur-sm border border-brand-accent/30 px-4 py-2 rounded-full flex items-center justify-between shadow-lg'>
+          <div className='flex items-center gap-12 md:gap-10 lg:gap-14 xl:gap-18'>
+            <img src={logo} className='w-14 rounded-full' alt="BonomayaLogo" />
+            <ul className='flex gap-4 md:gap-6 lg:gap-8'>
+              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>
+                <Link to="/">Home</Link>
+              </li>
+              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>
+                <Link to="/shop">Shop</Link>
+              </li>
+              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>About</li>
+              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>Track Order</li>
+              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>Contact</li>
+            </ul>
+          </div>
 
-        <div className='flex items-center gap-12 md:gap-20'>
-          <img src={logo} className='w-14 rounded-full' alt="BonomayaLogo" />
-          <ul className='flex gap-4 md:gap-6 lg:gap-8'>
-            <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>
-              <Link to="/">Home</Link>
-            </li>
-            <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>
-              <Link to="/shop">Shop</Link>
-            </li>
-            <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>About</li>
-            <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>Track Order</li>
-            <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>Contact</li>
-          </ul>
-        </div>
-
-        <div className='flex gap-4'>
-          <button className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-            <CiSearch size={20}/>
-          </button>
-          <Link to="/wishlist">
-            <button className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-              <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{wishlist.length}</div>
-                <CiHeart size={20}/>
+          <div className='flex gap-4'>
+            <button className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
+              <CiSearch size={20}/>
             </button>
-          </Link>
-          <Link to="/cart">
-            <button className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-              <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{cart.length}</div>
-              <PiShoppingCartSimpleLight size={20}/>
+            <Link to="/wishlist">
+              <button className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
+                <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{wishlist.length}</div>
+                  <CiHeart size={20}/>
+              </button>
+            </Link>
+            <Link to="/cart">
+              <button className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
+                <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{cart.length}</div>
+                <PiShoppingCartSimpleLight size={20}/>
+              </button>
+            </Link>
+            <button className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
+              <CiUser size={20}/>
             </button>
-          </Link>
-          <button className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-            <CiUser size={20}/>
-          </button>
+          </div>
         </div>
 
       </div>

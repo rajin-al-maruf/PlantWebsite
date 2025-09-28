@@ -12,17 +12,16 @@ const filterInfo = [
 {
     id: 'carelevel',
     title: 'Care Level',
-    options: ['Easy',
-                'Moderate', 
-                'Hard',
+    options: ['Beginner-Friendly',
+                'intermediate',
             ]
 },
 {
     id: 'lightrequirement',
     title: 'Light Requirement',
     options: ['Low Light',
-                'Medium Light', 
-                'Bright Light',
+                'Bright Indirect Light', 
+                'Bright Direct Light',
             ]
 },
 {
