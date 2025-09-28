@@ -12,15 +12,18 @@ import CheckoutPage from "./pages/CheckoutPage"
 function App() {
 
   const [plants, setPlants] = useState([])
-  // const [quantity, setQuantity] = useState(1)
-  // const increase = () => setQuantity(quantity + 1)
-  //   const decrease = () => {
-  //       if (quantity > 1) setQuantity(quantity - 1)
-  //   }
   return (
     <Routes>
       <Route path="/" element={<PageLayout />}>
-        <Route index element={<HomePage />} />
+        <Route 
+          index 
+          element={
+          <HomePage 
+            plants={plants} 
+            setPlants={setPlants}
+          />
+          }
+        />
         <Route 
           path="/shop" 
           element={
