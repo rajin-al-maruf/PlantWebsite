@@ -4,6 +4,7 @@ import Category from '../components/Category'
 import Hero from '../components/Hero'
 import Spinner from '../components/Spinner'
 import PopularProducts from '../components/PopularProducts'
+import FeaturedProduct from '../components/FeaturedProduct'
 
 const HomePage = ({plants, setPlants}) => {
 
@@ -32,6 +33,7 @@ const HomePage = ({plants, setPlants}) => {
         <Category 
           plants={plants}
         />
+        <FeaturedProduct />
         <PopularProducts 
           plants={plants}
         />
