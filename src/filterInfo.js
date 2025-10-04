@@ -13,7 +13,7 @@ const filterInfo = [
     id: 'carelevel',
     title: 'Care Level',
     options: ['Beginner-Friendly',
-                'intermediate',
+                'Intermediate',
             ]
 },
 {

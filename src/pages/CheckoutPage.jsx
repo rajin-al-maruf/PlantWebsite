@@ -111,7 +111,7 @@ const CheckoutPage = () => {
                 address: '',
                 paymentMethod: '',
             });
-            // window.location.href = '/';
+            window.location.href = '/';
         } catch (error) {
             console.error('Checkout failed:', error);
             alert('An unexpected error occurred. Please try again.');

@@ -4,9 +4,11 @@ import { CiHeart, CiSearch, CiUser } from 'react-icons/ci'
 import { PiShoppingCartSimpleLight } from 'react-icons/pi'
 import { HiOutlineMenuAlt2 } from 'react-icons/hi'
 import { IoCloseOutline } from 'react-icons/io5'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useCartStore from '../store/cartStore'
 import useWishlistStore from '../store/wishlistStore'
+import ProfilePopover from './ProfilePopover'
+import { useAuth } from '../AuthContext'
 
 const Navbar = () => {
 
@@ -33,6 +35,11 @@ const Navbar = () => {
   const cart = useCartStore((state) => state.cart)
   const wishlist = useWishlistStore((state) => state.wishlist)
 
+// Returns auth user only. ref:Authcontext.jsx
+  const {user, loading} = useAuth()
+  const navigate = useNavigate()
+  const [showPopover, setShowPopover] = useState(false)
+
   return (
     <nav className='absolute w-full z-50 top-0 left-0'>
 
@@ -52,9 +59,11 @@ const Navbar = () => {
                   <PiShoppingCartSimpleLight size={20}/>
                 </button>
               </Link>
-              <button className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-                <CiUser size={20}/>
-              </button>
+              <Link to="/auth">
+                <button className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
+                  <CiUser size={20}/>
+                </button>
+              </Link>
             </div>
           </div>
           <div className={showSideNav?
@@ -121,9 +130,18 @@ const Navbar = () => {
                 <PiShoppingCartSimpleLight size={20}/>
               </button>
             </Link>
-            <button className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
+            <button
+              onClick={() => {
+                if (user) {
+                  setShowPopover((prev) => !prev)
+                } else {
+                  navigate('/auth')
+                }
+              }}
+              className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
               <CiUser size={20}/>
             </button>
+            {showPopover && <ProfilePopover user={user} />}
           </div>
         </div>
 

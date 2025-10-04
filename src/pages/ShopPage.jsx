@@ -79,7 +79,7 @@ const ShopPage = ({plants, setPlants}) => {
   }
   
   return (
-    <div className='max-w-6xl 2xl:max-w-7xl mx-auto mt-35 px-4 md:px-6 lg:px-8 xl:px-0'>
+    <div className='max-w-6xl 2xl:max-w-7xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0'>
       <Breadcrumb/>
       <div className='w-full h-72 relative overflow-hidden bg-neutral-200 my-4 rounded-lg'>
         <img 
