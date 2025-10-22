@@ -8,7 +8,9 @@ import CartPage from "./pages/CartPage"
 import WishlistPage from "./pages/WishlistPage"
 import CheckoutPage from "./pages/CheckoutPage"
 import AuthPage from "./pages/AuthPage"
-
+import AdminDashBoard from "./pages/Admin/AdminDashboard"
+import Products from "./pages/Admin/Products"
+import AddProducts from "./pages/Admin/AddProducts"
 
 function App() {
 
@@ -41,13 +43,14 @@ function App() {
               setPlants={setPlants} 
             />}
         />
-        <Route 
-          path="/cart" 
-          element={<CartPage/>}
-        />
+        <Route path="/cart" element={<CartPage/>} />
         <Route path="/wishlist" element={<WishlistPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/auth" element={<AuthPage />} />
+      </Route>
+      <Route path="/admin" element={<AdminDashBoard />}>
+        <Route path="add-products" element={<AddProducts />}/>
+        <Route path="products" element={<Products />}/>
       </Route>
     </Routes>
   )
