@@ -27,6 +27,7 @@ const AddProducts = () => {
     e.preventDefault();
 
     try {
+      //upload image to supabase storage
       const fileName = `${Date.now()}-${addProductForm.image.name}`;
       console.log(fileName);
       const { data: imageData, error: imageError } = await supabase.storage
@@ -41,10 +42,7 @@ const AddProducts = () => {
         .from("plant-image")
         .getPublicUrl(imageData.path);
 
-      console.log("Public URL:", publicUrlData.publicUrl);
-
       // Now you can save the product details along with the image URL to your database 
-
       const { error: insertError } = await supabase
         .from("plants")
         .insert([
