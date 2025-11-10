@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import plantInfo from "../plantInfo";
 import useCartStore from "../store/cartStore";
 import { useState } from "react";
 import {supabase} from '../supabase'
