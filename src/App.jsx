@@ -11,6 +11,7 @@ import AuthPage from "./pages/AuthPage"
 import AdminDashBoard from "./pages/Admin/AdminDashboard"
 import Products from "./pages/Admin/Products"
 import AddProducts from "./pages/Admin/AddProducts"
+import OrderSuccessPage from "./pages/OrderSuccessPage"
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
         <Route path="/wishlist" element={<WishlistPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/ordersuccess" element={<OrderSuccessPage />} />
       </Route>
       <Route path="/admin" element={<AdminDashBoard />}>
         <Route path="add-products" element={<AddProducts />}/>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useCartStore from "../store/cartStore";
 import { useState } from "react";
 import {supabase} from '../supabase'
@@ -11,6 +11,8 @@ const CheckoutPage = () => {
     const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shipping = subtotal > 0 ? 80 : 0;
     const total = subtotal + shipping;
+
+    const navigate = useNavigate();
 
     const [form, setForm] = useState({
         firstName: '',
@@ -74,7 +76,6 @@ const CheckoutPage = () => {
                 alert('There was an issue placing your order. Please try again.');
             } else {
                 console.log('Order placed successfully:', orderInfo);
-                alert('Your order has been placed successfully!');
             }
 
             //2.push order items to supabase table 'order_items'
@@ -110,7 +111,7 @@ const CheckoutPage = () => {
                 address: '',
                 paymentMethod: '',
             });
-            window.location.href = '/';
+            navigate('/ordersuccess');
         } catch (error) {
             console.error('Checkout failed:', error);
             alert('An unexpected error occurred. Please try again.');
@@ -274,7 +275,7 @@ const CheckoutPage = () => {
                             {cart.map((items, index) => {
                                 return(
                                     <div key={index} className='flex gap-4 px-2 py-4 border-t border-t-neutral-300'>
-                                        <Link to={`/product/${plantInfo.id}`}>
+                                        <Link to={`/product/${items.id}`}>
                                             <img 
                                                 src={items.imgurl} 
                                                 alt={items.name}

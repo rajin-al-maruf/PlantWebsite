@@ -28,7 +28,7 @@ const FeaturedProduct = () => {
                     healing plant. Perfect for your home or office to bring freshness
                     and a modern green vibe.
                 </p>
-                <Link to="/product/e06d57aa-047b-4299-b018-351fbbe5ee15">
+                <Link to="/product/43ecd2d4-bedb-41b3-b034-c8b5cbe0bb26">
                     <button className="flex items-center px-4 py-2 mt-8 text-xs sm:text-base border border-brand-primary hover:bg-brand-primary text-brand-primary hover:text-brand-accent hover:scale-105 transition duration-300 rounded-full cursor-pointer">
                         Buy Now
                         <div className="pl-2">
