@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import logo from '../assets/BonomayaLogo.jpg'
+import logo from '/assets/BonomayaLogo.jpg'
 import { CiHeart, CiSearch, CiUser } from 'react-icons/ci'
 import { PiShoppingCartSimpleLight } from 'react-icons/pi'
 import { HiOutlineMenuAlt2 } from 'react-icons/hi'

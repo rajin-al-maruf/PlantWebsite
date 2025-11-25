@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../assets/BonomayaLogo.jpg'
+import logo from '/assets/BonomayaLogo.jpg'
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 

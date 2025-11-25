@@ -6,7 +6,7 @@ import filterInfo from '../filterInfo'
 import { supabase } from '../supabase'
 import SkeletonCard from '../components/SkeletonCard'
 import Spinner from '../components/Spinner'
-import shopPageImg from '../assets/shopPageImg.jpg'
+import shopPageImg from '/assets/shopPageImg.jpg'
 import Breadcrumb from '../components/Breadcrumb'
 
 

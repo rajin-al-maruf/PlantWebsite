@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import logo from '../assets/BonomayaLogo.jpg'
+import logo from '/assets/BonomayaLogo.jpg'
 import { MdOutlineAddBox } from "react-icons/md";
 import { AiOutlineProduct } from "react-icons/ai";
 

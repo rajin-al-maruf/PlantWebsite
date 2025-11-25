@@ -1,7 +1,7 @@
 import { GoArrowRight } from 'react-icons/go'
 import { PiPhoneCallThin } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
-import bg from '../assets/bg-web.jpg'
+import bg from '/assets/bg-web.jpg'
 
 const Hero = () => {
   return (

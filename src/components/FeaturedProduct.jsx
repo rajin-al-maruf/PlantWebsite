@@ -1,4 +1,4 @@
-import featuredProduct from '../assets/plants/aloevera.png'
+import featuredProduct from '/assets/plants/aloevera.png'
 import { GoArrowRight } from 'react-icons/go'
 import { Link } from 'react-router-dom'
 

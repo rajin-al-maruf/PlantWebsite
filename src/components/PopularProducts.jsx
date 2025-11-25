@@ -9,8 +9,8 @@ const PopularProducts = ({plants}) => {
         <h2 className='mt-2 text-2xl md:text-3xl font-poppins font-medium'>
             Discover Our Products
         </h2>
-        <div className='w-full mt-16 grid grid-cols-5 gap-4'>
-            {plants.slice(0,5).map((plant, index) => (
+        <div className='w-full mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+            {plants.slice(0,8).map((plant, index) => (
               <ProductCard
                 key={index}
                 id={plant.id}
