@@ -29,6 +29,8 @@ const SignUp = ({isLogin, setIsLogin}) => {
         if(authError){
             alert(authError.message)
             return
+        }else{
+            navigate('/')
         }
 //get user
         const user = data.user
