@@ -30,7 +30,7 @@ const SignUp = ({isLogin, setIsLogin}) => {
             alert(authError.message)
             return
         }else{
-            navigate('/')
+            navigate('/auth')
         }
 //get user
         const user = data.user
