@@ -19,13 +19,15 @@ const SkeletonCard = () => {
         </div>
 
         {/* Dropdown placeholders */}
-        <div className="h-12 bg-neutral-200 rounded mb-4"></div>
-        <div className="h-12 bg-neutral-200 rounded mb-4"></div>
+        <div className="h-24 bg-neutral-200 rounded mb-4"></div>
+        <div className="h-24 bg-neutral-200 rounded mb-4"></div>
 
         {/* Buttons */}
         <div className="h-10 bg-neutral-200 rounded mb-3"></div>
         <div className="h-10 bg-neutral-200 rounded"></div>
+
       </div>
+
     </div>
   );
 }

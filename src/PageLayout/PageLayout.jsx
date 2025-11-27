@@ -3,10 +3,10 @@ import { Outlet } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
-const PageLayout = () => {
+const PageLayout = ({plants}) => {
   return (
     <div className='min-h-screen flex flex-col gap-40'>
-        <Navbar />
+        <Navbar plants={plants}/>
         <main className='flex-1'>
             <Outlet />
         </main>

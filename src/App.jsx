@@ -18,7 +18,7 @@ function App() {
   const [plants, setPlants] = useState([])
   return (
     <Routes>
-      <Route path="/" element={<PageLayout />}>
+      <Route path="/" element={<PageLayout plants={plants}/>}>
         <Route 
           index 
           element={
