@@ -11,6 +11,7 @@ import ProfilePopover from './ProfilePopover'
 import { useAuth } from '../AuthContext'
 import { supabase } from '../supabase'
 import useClickOutside from '../hooks/useClickOutside'
+import { toast } from 'sonner'
 
 const Navbar = ({plants}) => {
 
@@ -148,7 +149,7 @@ const Navbar = ({plants}) => {
 
         <div className='bg-brand-accent/30 backdrop-blur-sm border border-brand-accent/30 px-4 py-2 rounded-full flex items-center justify-between shadow-lg'>
           <div className='flex items-center gap-12 md:gap-10 lg:gap-14 xl:gap-18'>
-            <img src={logo} className='w-14 rounded-full' alt="BonomayaLogo" />
+            <Link to='/'><img src={logo} className='w-14 rounded-full' alt="BonomayaLogo" /></Link>
             <ul className='flex gap-4 md:gap-6 lg:gap-8'>
               <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>
                 <Link to="/">Home</Link>
@@ -198,7 +199,13 @@ const Navbar = ({plants}) => {
             </div>
             <button
               onClick={() => {
-                wishlist.length > 0 ? navigate('/wishlist') : navigate('/shop')
+                if(wishlist.length > 0){
+                  navigate('/wishlist')
+                }else{
+                  navigate('/shop')
+                  toast.info("Your wishlist is empty")
+                }
+                  
               }}
             >
               <div className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
@@ -208,7 +215,12 @@ const Navbar = ({plants}) => {
             </button>
             <button
               onClick={() => {
-                cart.length > 0 ? navigate('/cart') : navigate('/shop')
+                if(wishlist.length > 0){
+                  navigate('/wishlist')
+                }else{
+                  navigate('/shop')
+                  toast.info("Your cart is empty")
+                }
               }}
             >
               <div className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>

@@ -12,49 +12,54 @@ import AdminDashBoard from "./pages/Admin/AdminDashboard"
 import Products from "./pages/Admin/Products"
 import AddProducts from "./pages/Admin/AddProducts"
 import OrderSuccessPage from "./pages/OrderSuccessPage"
+import { Toaster } from 'sonner';
 
 function App() {
 
   const [plants, setPlants] = useState([])
   return (
-    <Routes>
-      <Route path="/" element={<PageLayout plants={plants}/>}>
-        <Route 
-          index 
-          element={
-          <HomePage 
-            plants={plants} 
-            setPlants={setPlants}
-          />
-          }
-        />
-        <Route 
-          path="/shop" 
-          element={
-            <ShopPage 
+    <>
+      <Routes>
+        <Route path="/" element={<PageLayout plants={plants}/>}>
+          <Route 
+            index 
+            element={
+            <HomePage 
               plants={plants} 
               setPlants={setPlants}
-            />}
-        />
-        <Route 
-          path="/product/:id" 
-          element={
-            <ProductPage 
-              plants={plants} 
-              setPlants={setPlants} 
-            />}
-        />
-        <Route path="/cart" element={<CartPage/>} />
-        <Route path="/wishlist" element={<WishlistPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/ordersuccess" element={<OrderSuccessPage />} />
-      </Route>
-      <Route path="/admin" element={<AdminDashBoard />}>
-        <Route path="add-products" element={<AddProducts />}/>
-        <Route path="products" element={<Products />}/>
-      </Route>
-    </Routes>
+            />
+            }
+          />
+          <Route 
+            path="/shop" 
+            element={
+              <ShopPage 
+                plants={plants} 
+                setPlants={setPlants}
+              />}
+          />
+          <Route 
+            path="/product/:id" 
+            element={
+              <ProductPage 
+                plants={plants} 
+                setPlants={setPlants} 
+              />}
+          />
+          <Route path="/cart" element={<CartPage/>} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/ordersuccess" element={<OrderSuccessPage />} />
+        </Route>
+        <Route path="/admin" element={<AdminDashBoard />}>
+          <Route path="add-products" element={<AddProducts />}/>
+          <Route path="products" element={<Products />}/>
+        </Route>
+      </Routes>
+      <Toaster richColors /> 
+    </>
+
   )
 }
 

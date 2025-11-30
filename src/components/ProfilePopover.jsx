@@ -3,6 +3,7 @@ import { supabase } from "../supabase";
 import { CiUser } from "react-icons/ci";
 import { PiSpinner } from "react-icons/pi";
 import useClickOutside from "../hooks/useClickOutside";
+import { toast } from "sonner";
 
 const ProfilePopover = ({ user, showPopover, setShowPopover }) => {
   const [profile, setProfile] = useState();
@@ -34,6 +35,7 @@ const ProfilePopover = ({ user, showPopover, setShowPopover }) => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.reload();
+    toast.success("Logged out successfully");
   };
 
   console.log(profile)

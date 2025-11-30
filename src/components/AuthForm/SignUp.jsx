@@ -3,6 +3,7 @@ import {supabase} from '../../supabase'
 import {useNavigate} from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import SocialAuth from './SocialAuth'
+import { toast } from 'sonner'
 
 const SignUp = ({isLogin, setIsLogin}) => {
 
@@ -28,9 +29,11 @@ const SignUp = ({isLogin, setIsLogin}) => {
         setLoading(false)
         if(authError){
             alert(authError.message)
+            toast.error(authError.message)
             return
         }else{
             navigate('/')
+            toast.success('Signed up successfully!')
         }
 //get user
         const user = data.user

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {supabase} from '../../supabase'
 import {useNavigate} from 'react-router-dom'
 import SocialAuth from './SocialAuth'
+import { toast } from 'sonner'
 
 const LogIn = ({isLogin, setIsLogin}) => {
 
@@ -25,9 +26,10 @@ const LogIn = ({isLogin, setIsLogin}) => {
 
         setLoading(false)
         if(error){
-            alert(error.message)
+            toast.error(error.message)
         }else{
             navigate('/')
+            toast.success('Logged in successfully!')
         }
 
         

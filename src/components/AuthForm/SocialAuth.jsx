@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { supabase } from "../../supabase";
 import { FcGoogle } from "react-icons/fc";
 
@@ -9,7 +10,14 @@ const SocialAuth = ({isLogin}) => {
         redirectTo: window.location.origin,
       },
     });
-    if (error) console.error("Google Auth Error:", error.message);
+    if (error){ 
+      console.error("Google Auth Error:", error.message)
+      toast.error(error.message);
+    }
+    else {
+      console.log("Google Auth initiated");
+      toast.success('Logged in successfully!');
+    }
   };
 
   return (

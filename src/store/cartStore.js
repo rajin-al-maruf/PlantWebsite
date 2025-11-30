@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -20,15 +21,23 @@ const useCartStore = create(
           };
         }
         //if the product does not exist in the cart, add it with the specified quantity
-        return { cart: [...state.cart, { ...product, quantity }] };
+        toast.success(`${product.name} added to cart`);
+        return { cart: [...state.cart, { ...product, quantity }] 
+      };
       }),
 
       removeFromCart: (id) =>
           set((state) => ({
-              cart: state.cart.filter((item) => item.id !== id)
+           cart: state.cart.filter((item) => {
+             if (item.id === id) toast.success(`${item.name} removed from cart`);
+             return item.id !== id;
+           })
           })),
 
-      clearCart: () => set({ cart: [] }),
+      clearCart: () => {
+         toast.success("Cart cleared");
+        set({ cart: [] });
+      },
 
       increaseQuantity: (id) =>
       set((state) => ({
