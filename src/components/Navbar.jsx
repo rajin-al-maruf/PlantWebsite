@@ -215,8 +215,8 @@ const Navbar = ({plants}) => {
             </button>
             <button
               onClick={() => {
-                if(wishlist.length > 0){
-                  navigate('/wishlist')
+                if(cart.length > 0){
+                  navigate('/cart')
                 }else{
                   navigate('/shop')
                   toast.info("Your cart is empty")
