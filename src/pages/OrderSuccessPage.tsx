@@ -1,15 +1,14 @@
-import React from 'react'
 import { Link } from "react-router-dom";
-import useCartStore from "../store/cartStore";
+// import useCartStore from "../store/cartStore";
 import { GoCheckCircleFill } from 'react-icons/go'
 
 const OrderSuccessPage = () => {
-    const cart = useCartStore((state) => state.cart)
+    // const cart = useCartStore((state) => state.cart)
 
-    const noOfItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-    const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const shipping = subtotal > 0 ? 80 : 0;
-    const total = subtotal + shipping;
+    // const noOfItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+    // const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    // const shipping = subtotal > 0 ? 80 : 0;
+    // const total = subtotal + shipping;
   return (
     <div className='max-w-3xl 2xl:max-w-4xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0 flex justify-center items-center min-h-[60vh]'>
         <div className='flex flex-col items-center justify-center p-6'>
@@ -36,7 +35,7 @@ const OrderSuccessPage = () => {
                                 <div className="w-full flex justify-between">
                                     <div>
                                         <p className='font-medium'>{items.name}</p>
-                                        <p className='text-xs mt-1 text-neutral-600'>Care Level: {items.careLevel}</p>
+                                        <p className='text-xs mt-1 text-neutral-600'>Care Level: {items.carelevel}</p>
                                         <p className="text-xs mt-1 text-neutral-600">Quantity: {items.quantity}</p>
                                     </div>
                                     <div className="flex flex-col justify-between items-end">

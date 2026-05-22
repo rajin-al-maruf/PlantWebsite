@@ -14,38 +14,46 @@ import AddProducts from "./pages/Admin/AddProducts"
 import OrderSuccessPage from "./pages/OrderSuccessPage"
 import { Toaster } from 'sonner';
 
+export interface Plant {
+  id: string
+  name: string
+  price: number
+  imgurl: string
+  description: string
+  lightrequirement: string
+  waterrequirement: string
+  carelevel: string
+  availability: string
+  category: string
+  stock: number
+  created_at: string | null
+}
+
 function App() {
 
-  const [plants, setPlants] = useState([])
+  const [plants, setPlants] = useState<Plant[]>([])
   return (
     <>
       <Routes>
-        <Route path="/" element={<PageLayout plants={plants}/>}>
-          <Route 
-            index 
+        <Route path="/" element={<PageLayout />}>
+          <Route
+            index
             element={
-            <HomePage 
-              plants={plants} 
+            <HomePage
+              plants={plants}
               setPlants={setPlants}
             />
             }
           />
-          <Route 
+          <Route
             path="/shop" 
             element={
               <ShopPage 
-                plants={plants} 
+                plants={plants}
                 setPlants={setPlants}
               />}
           />
-          <Route 
-            path="/product/:id" 
-            element={
-              <ProductPage 
-                plants={plants} 
-                setPlants={setPlants} 
-              />}
-          />
+          <Route path="/product/:id" element={<ProductPage />}/>
           <Route path="/cart" element={<CartPage/>} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />

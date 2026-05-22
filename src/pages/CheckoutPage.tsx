@@ -1,7 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import useCartStore from "../store/cartStore";
 import { useState } from "react";
+import type { ChangeEvent } from "react";
 import {supabase} from '../supabase'
+
+interface CheckoutForm {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    paymentMethod: string;
+}
+
 
 const CheckoutPage = () => {
 
@@ -14,7 +25,7 @@ const CheckoutPage = () => {
 
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<CheckoutForm>({
         firstName: '',
         lastName: '',
         email: '',
@@ -23,10 +34,10 @@ const CheckoutPage = () => {
         paymentMethod: '',
     })
 
-    const [error, setError] = useState({});
+const [error, setError] = useState<Partial<CheckoutForm>>({});
 
     const validateForm = () => {
-        let tempError = {};
+        let tempError: Partial<CheckoutForm> = {};
 
         if(!form.firstName.trim()) tempError.firstName = "First Name is required";
         if(!form.lastName.trim()) tempError.lastName = "Last Name is required";
@@ -39,7 +50,7 @@ const CheckoutPage = () => {
         return Object.keys(tempError).length === 0;
     }
 
-    const handleFormChange = (e) => {
+    const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm((prev) => ({
             ...prev,
             [e.target.name]: e.target.value
@@ -74,6 +85,7 @@ const CheckoutPage = () => {
             if (orderError) {
                 console.error('Error placing order:', orderError);
                 alert('There was an issue placing your order. Please try again.');
+                return;
             } else {
                 console.log('Order placed successfully:', orderInfo);
             }
@@ -285,7 +297,7 @@ const CheckoutPage = () => {
                                         <div className="w-full flex justify-between">
                                             <div>
                                                 <p className='font-medium'>{items.name}</p>
-                                                <p className='text-xs mt-1 text-neutral-600'>Care Level: {items.careLevel}</p>
+                                                <p className='text-xs mt-1 text-neutral-600'>Care Level: {items.carelevel}</p>
                                                 <p className="text-xs mt-1 text-neutral-600">Quantity: {items.quantity}</p>
                                             </div>
                                             <div className="flex flex-col justify-between items-end">

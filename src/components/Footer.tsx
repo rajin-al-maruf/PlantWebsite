@@ -1,5 +1,3 @@
-import React from 'react'
-import logo from '/assets/BonomayaLogo.jpg'
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 
@@ -8,7 +6,7 @@ const Footer = () => {
     <footer className='w-full bg-brand-primary-dark text-white px-4 md:px-6 lg:px-8 xl:px-0'>
         <div className='max-w-6xl 2xl:max-w-7xl mx-auto py-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 border-b border-b-brand-primary-light'>
             <div className='flex flex-col items-center sm:block'>
-                <img src={logo} className='w-14 rounded-full' alt="BonomayaLogo" />
+                <img src='/assets/BonomayaLogo.jpg' className='w-14 rounded-full' alt="BonomayaLogo" />
                 <p className='mt-4 text-sm text-brand-accent text-center sm:text-start'>
                     Welcome to Bonomaya. Your trusted source for beautiful, low-maintenance indoor plants that bring life and freshness to your home and workspace.
                 </p>

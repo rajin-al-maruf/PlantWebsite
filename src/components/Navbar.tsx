@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import logo from '/assets/BonomayaLogo.jpg'
 import { CiHeart, CiSearch, CiUser } from 'react-icons/ci'
 import { PiShoppingCartSimpleLight } from 'react-icons/pi'
 import { HiOutlineMenuAlt2 } from 'react-icons/hi'
@@ -12,17 +11,20 @@ import { useAuth } from '../AuthContext'
 import { supabase } from '../supabase'
 import useClickOutside from '../hooks/useClickOutside'
 import { toast } from 'sonner'
+import type { Plant } from '../App'
 
-const Navbar = ({plants}) => {
+type SearchResult = Pick<Plant, 'id' | 'name' | 'price' | 'imgurl' | 'availability'>;
+
+const Navbar = () => {
 
   // Hide on scroll down, show on scroll up for top navbar
   const [showTopNav, setShowTopNav] = useState(true)
-  const [lastScrollY, setLastScrollY] = useState(0)
+  const lastScrollY = useRef(0)
   
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(dropdownRef, () => {
     setResults([]);
@@ -42,7 +44,6 @@ const Navbar = ({plants}) => {
     }
     const fetchSearchResults = async () => {
       setLoading(true);
-      if(!search.trim()) return [];
       
       const {data, error} = await supabase
         .from('plants')
@@ -54,28 +55,28 @@ const Navbar = ({plants}) => {
         console.error('Error fetching search results:', error);
         setResults([]);
       } else {
-        setResults(data);
+        setResults(data as SearchResult[]);
       }
+      setLoading(false);
     };
     fetchSearchResults();
-    setLoading(false);
   },[search])
   console.log("Search Results:", results);
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
+      if (window.scrollY > lastScrollY.current) {
         // scrolling down
         setShowTopNav(false)
       } else {
         // scrolling up
         setShowTopNav(true)
       }
-      setLastScrollY(window.scrollY)
+      lastScrollY.current = window.scrollY
     }
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [lastScrollY])
+  }, [])
 
   const [showSideNav, setShowSideNav] = useState(false)
   const cart = useCartStore((state) => state.cart)
@@ -127,7 +128,7 @@ const Navbar = ({plants}) => {
           >
             <IoCloseOutline size={28} />
           </button>
-          <img src={logo} className='w-14 mt-6 rounded-full' alt="BonomayaLogo" />
+          <img src="/assets/BonomayaLogo.jpg" className='w-14 mt-6 rounded-full' alt="BonomayaLogo" />
           <ul className='flex flex-col mt-8 gap-4 md:gap-6'>
             <li className='cursor-pointer pb-4 border-b border-b-brand-primary text-brand-primary-dark hover:text-brand-accent font-semibold '>
               <Link to="/">Home</Link>
@@ -149,7 +150,7 @@ const Navbar = ({plants}) => {
 
         <div className='bg-brand-accent/30 backdrop-blur-sm border border-brand-accent/30 px-4 py-2 rounded-full flex items-center justify-between shadow-lg'>
           <div className='flex items-center gap-12 md:gap-10 lg:gap-14 xl:gap-18'>
-            <Link to='/'><img src={logo} className='w-14 rounded-full' alt="BonomayaLogo" /></Link>
+            <Link to='/'><img src="/assets/BonomayaLogo.jpg" className='w-14 rounded-full' alt="BonomayaLogo" /></Link>
             <ul className='flex gap-4 md:gap-6 lg:gap-8'>
               <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>
                 <Link to="/">Home</Link>
@@ -177,7 +178,12 @@ const Navbar = ({plants}) => {
                 <CiSearch size={20}/>
               </button>
               
-              {search && results.length > 0 && (
+              {search && loading && (
+                <div className="absolute top-12 md:right-0 right-4 bg-brand-accent shadow-lg rounded-md p-2 w-80 max-h-80 overflow-y-auto z-50 text-center text-sm text-neutral-500">
+                  Loading...
+                </div>
+              )}
+              {search && !loading && results.length > 0 && (
                 <div ref={dropdownRef} className="absolute top-12 md:right-0 right-4 bg-brand-accent shadow-lg rounded-md p-2 w-80 max-h-80 overflow-y-auto z-50">
                   {results.map((plant) => (
                     <Link to={`/product/${plant.id}`} onClick={() => {handleCloseDropdown()}} key={plant.id} className='flex gap-4 mb-2'>
@@ -239,7 +245,7 @@ const Navbar = ({plants}) => {
               className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
               <CiUser size={20}/>
             </button>
-            {showPopover && <ProfilePopover user={user} showPopover={showPopover} setShowPopover={setShowPopover}/>}
+            {showPopover && user && <ProfilePopover user={user} setShowPopover={setShowPopover}/>}
           </div>
         </div>
 

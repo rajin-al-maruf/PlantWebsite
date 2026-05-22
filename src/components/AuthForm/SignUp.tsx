@@ -1,13 +1,23 @@
 import { useState } from 'react'
 import {supabase} from '../../supabase'
 import {useNavigate} from 'react-router-dom'
-import { FcGoogle } from 'react-icons/fc'
 import SocialAuth from './SocialAuth'
 import { toast } from 'sonner'
+import type { Dispatch, SetStateAction, ChangeEvent, SubmitEvent } from 'react'
 
-const SignUp = ({isLogin, setIsLogin}) => {
+interface LoginProps {
+    isLogin: boolean;
+    setIsLogin: Dispatch<SetStateAction<boolean>>;
+}
+interface SignupForm {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+}
+const SignUp = ({isLogin, setIsLogin}: LoginProps) => {
 
-    const [signupForm, setSignupForm] = useState({
+    const [signupForm, setSignupForm] = useState<SignupForm>({
             firstName: '',
             lastName: '',
             email: '',
@@ -17,7 +27,7 @@ const SignUp = ({isLogin, setIsLogin}) => {
     const navigate = useNavigate()
     
 
-    const handleSignup = async (e) => {
+    const handleSignup = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
 // create new user in supabase auth system(not in db) with email,pass
@@ -37,6 +47,8 @@ const SignUp = ({isLogin, setIsLogin}) => {
         }
 //get user
         const user = data.user
+        
+        if (!user) return;
 //after successfully creating the user. create an userInfo row for that user with his other info in db table
         const {error: profileInsertError} = await supabase.from('profiles').insert([
             {
@@ -57,7 +69,7 @@ const SignUp = ({isLogin, setIsLogin}) => {
 
     }
 
-    const handleFormChange = (e) => {
+    const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSignupForm((prev) => ({
             ...prev,
             [e.target.name] : e.target.value 

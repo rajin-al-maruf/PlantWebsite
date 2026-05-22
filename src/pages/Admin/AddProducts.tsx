@@ -1,9 +1,25 @@
 import { useState } from "react"
 import { supabase } from "../../supabase";
+import type { MouseEvent, ChangeEvent } from "react";
+import { toast } from "sonner";
+
+interface AddProductFormState {
+  productName: string;
+  price: string;
+  image: File | null;
+  description: string;
+  lightRequirement: string;
+  waterRequirement: string;
+  careLevel: string;
+  availability: string;
+  category: string;
+  stock: string;
+}
 
 const AddProducts = () => {
 
-  const [addProductForm, setAddProductForm] = useState({
+  const [isLoading, setIsLoading] = useState(false);
+  const [addProductForm, setAddProductForm] = useState<AddProductFormState>({
     productName: "",
     price: "",
     image: null,
@@ -15,27 +31,31 @@ const AddProducts = () => {
     category: "",
     stock: "1",
   })
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       setAddProductForm((prev) => ({
           ...prev,
           [e.target.name]: e.target.value
       }))
   }
-  console.log(addProductForm)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     try {
+      if (!addProductForm.image) {
+        alert("Please select an image first!");
+        return;
+      }
+
+      setIsLoading(true);
+
       //upload image to supabase storage
-      const fileName = `${Date.now()}-${addProductForm.image.name}`;
-      console.log(fileName);
+      const fileName = `${Date.now()}-${addProductForm.image?.name}`;
       const { data: imageData, error: imageError } = await supabase.storage
         .from("plant-image")
-        .upload(fileName, addProductForm.image); 
+        .upload(fileName, addProductForm.image as File); 
 
       if (imageError) throw imageError;
-      console.log("Image uploaded:", imageData);
 
       // get public url (optional)
       const { data: publicUrlData } = supabase.storage
@@ -61,9 +81,26 @@ const AddProducts = () => {
         ]);
 
       if (insertError) throw insertError;
-      console.log("Product inserted");
+      
+      toast.success("Product added successfully!");
+      
+      setAddProductForm({
+        productName: "",
+        price: "",
+        image: null,
+        description: "",
+        lightRequirement: "",
+        waterRequirement: "",
+        careLevel: "",
+        availability: "In Stock",
+        category: "",
+        stock: "1",
+      });
     } catch (error) {
       console.error(error);
+      toast.error("Failed to add product.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -171,20 +208,22 @@ const AddProducts = () => {
           <div>
             <label className='block text-sm font-medium mb-2'>Upload Product <span className='text-red-600'>*</span></label>
             <input 
-              onChange={(e) => {
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0] || null;
                   setAddProductForm((prev) => ({
                       ...prev,
-                      image: e.target.files[0]
+                      image: file
                   }))
               }}
               type="file"
-              className="'w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light"
+              className="w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light"
             />
           </div>
           <button
             onClick={handleSubmit}
-            className='w-1/4 p-2 text-white text-sm bg-black hover:bg-brand-primary duration-200 mt-4 rounded-md cursor-pointer'>
-            Add product
+            disabled={isLoading}
+            className='w-1/4 p-2 text-white text-sm bg-black hover:bg-brand-primary duration-200 mt-4 rounded-md cursor-pointer disabled:bg-neutral-400'>
+            {isLoading ? "Adding..." : "Add product"}
           </button>
         </div>
 

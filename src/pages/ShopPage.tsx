@@ -6,23 +6,35 @@ import filterInfo from '../filterInfo'
 import { supabase } from '../supabase'
 import SkeletonCard from '../components/SkeletonCard'
 import Spinner from '../components/Spinner'
-import shopPageImg from '/assets/shopPageImg.jpg'
 import Breadcrumb from '../components/Breadcrumb'
+import type { Plant } from "../App";
+import type { Dispatch, SetStateAction } from "react";
+import type { FilterOption } from '../filterInfo';
 
+interface ShopPageProps {
+  plants: Plant[];
+  setPlants: Dispatch<SetStateAction<Plant[]>>;
+}
 
+export interface FilterState {
+  category: string[];
+  carelevel: string[];
+  lightrequirement: string[];
+  availability: string[];
+}
 
-const ShopPage = ({plants, setPlants}) => {
+const ShopPage = ({plants, setPlants}: ShopPageProps) => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const [filter, setFilter] = useState({
+  const [filter, setFilter] = useState<FilterState>({
     category: [],
     carelevel: [],
     lightrequirement: [],
     availability: [],
   })
   const [sortBy, setSortBy] = useState("newest")
-  const [tempFilter, setTempFilter] = useState(filter)
+  const [tempFilter, setTempFilter] = useState<FilterState>(filter)
   
   // console.log(filter[filterInfo[0].id])
 
@@ -60,17 +72,17 @@ const ShopPage = ({plants, setPlants}) => {
         if(error){
           console.error("Supabase error:", error.message);
         }else{
-          setPlants(data)
+          setPlants((data as Plant[]) || [])
         }
 
       } catch (error) {
-        console.error("Unexpected error:", err);
+        console.error("Unexpected error:", error);
       }finally{
         setIsLoading(false)
       }
     }
     fetchPlants()
-  },[filter, sortBy])
+  },[filter, sortBy, setPlants])
 
   const [showFilters, setShowFilters] = useState(true)
 
@@ -83,7 +95,7 @@ const ShopPage = ({plants, setPlants}) => {
       <Breadcrumb/>
       <div className='w-full h-72 relative overflow-hidden bg-neutral-200 my-4 rounded-lg'>
         <img 
-          src={shopPageImg} 
+          src='/assets/shopPageImg.jpg'
           alt="featured plant"
           className='object-cover object-[35%_85%] w-full h-full absolute opacity-80'
         />
@@ -112,13 +124,13 @@ const ShopPage = ({plants, setPlants}) => {
       <div className='md:grid grid-cols-4 gap-10 mt-6'>
 {/* filter for lg-screen */}
         <div className="hidden md:block">
-          {filterInfo.map((filterInfo, index) => {
+          {filterInfo.map((info: FilterOption, index) => {
             return(
               <Filter
                 key={index}
-                filterType={filterInfo.id}
-                title={filterInfo.title}
-                options={filterInfo.options}
+                filterType={info.id}
+                title={info.title}
+                options={info.options}
                 filter={filter}
                 setFilter={setFilter}
               />
@@ -136,13 +148,13 @@ const ShopPage = ({plants, setPlants}) => {
 {/* filter for sm-screen */}
         {showFilters && (
           <div className='block md:hidden'>
-            {filterInfo.map((filterInfo, index) => {
+            {filterInfo.map((info: FilterOption, index) => {
               return(
                 <Filter
                   key={index}
-                  filterType={filterInfo.id}
-                  title={filterInfo.title}
-                  options={filterInfo.options}
+                  filterType={info.id}
+                  title={info.title}
+                  options={info.options}
                   filter={tempFilter}
                   setFilter={setTempFilter}
                 />
@@ -176,15 +188,10 @@ const ShopPage = ({plants, setPlants}) => {
           </div>
         ) : plants.length > 0 ? (
           <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'>
-            {plants.map((plant, index) => (
+            {plants.map((plant) => (
               <ProductCard
-                key={index}
-                id={plant.id}
-                name={plant.name}
-                price={plant.price}
-                imgurl={plant.imgurl}
-                availability={plant.availability}
-                carelevel={plant.carelevel}
+                key={plant.id}
+                plant={plant}
               />
             ))}
           </div>

@@ -1,4 +1,10 @@
-const filterInfo = [
+export interface FilterOption {
+    id: 'category' | 'carelevel' | 'lightrequirement' | 'availability';
+    title: string;
+    options: string[];
+}
+
+const filterInfo: FilterOption[] = [
 {
     id: 'category',
     title: 'Category',

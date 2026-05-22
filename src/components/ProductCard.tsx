@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PiHeartStraightFill, PiHeartStraightLight } from 'react-icons/pi'
 import useCartStore from '../store/cartStore'
 import useWishlistStore from '../store/wishlistStore'
+import type { Plant } from "../App";
 
-const ProductCard = ({id,name,price,imgurl, availability, carelevel}) => {
+interface ProductCardProps {
+  plant: Plant;
+}
+
+const ProductCard = ({ plant }: ProductCardProps) => {
 
 const [isWished, setIsWished] = useState(false)
 const addToCart = useCartStore((state) => state.addToCart)
@@ -12,7 +17,7 @@ const addToWishlist = useWishlistStore((state) => state.addToWishlist)
 const removeFromWishlist = useWishlistStore((state) => state.removeFromWishlist)
 
 // const wished = () => {
-//     if(wishlist.find((item) => item.id === id)){
+//     if(wishlist.find((item) => item.id === plant.id)){
 //         return true
 //     }else{
 //         return false
@@ -21,7 +26,7 @@ const removeFromWishlist = useWishlistStore((state) => state.removeFromWishlist)
 
 return (
     // when we click in the card it will go to the product page ex: /product/1
-    <Link to={`/product/${id}`}>
+    <Link to={`/product/${plant.id}`}>
         <div className='w-full bg-neutral-100 border border-neutral-200 rounded-md cursor-pointer hover:shadow-xl hover:scale-101 duration-300'>
             <div className='p-2 md:p-4'>
                 <div className='w-full aspect-square overflow-hidden flex items-center justify-center bg-neutral-100 relative'>
@@ -34,7 +39,7 @@ return (
                                     e.stopPropagation();
                                     e.preventDefault();
                                     setIsWished(false)
-                                    removeFromWishlist(id)
+                                    removeFromWishlist(plant.id)
                                 }}
                                 className='right-0 text-brand-primary hover:scale-110 duration-300'
                             /> : 
@@ -44,25 +49,25 @@ return (
                                     e.stopPropagation();
                                     e.preventDefault();
                                     setIsWished(true)
-                                    addToWishlist({id, name, price, imgurl})
+                                    addToWishlist(plant)
                                 }}
                                 className='right-0 text-brand-primary hover:scale-110 duration-300'
                         /> }
                     </div>
                     <img 
-                        src={imgurl} 
-                        alt={name} 
+                        src={plant.imgurl} 
+                        alt={plant.name} 
                         className='max-w-full max-h-full object-contain'
                     />
                 </div>
                 <div className='p-2 border-t border-neutral-300 text-center'>
-                    <h3 className='font-semibold text-xs md:text-sm'>{name}</h3>
-                    <h4 className='pt-1 text-xs md:text-sm'>Tk {price}</h4>
+                    <h3 className='font-semibold text-xs md:text-sm'>{plant.name}</h3>
+                    <h4 className='pt-1 text-xs md:text-sm'>Tk {plant.price}</h4>
                     <button 
                         onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
-                            addToCart({id, name, price, imgurl, availability, carelevel})
+                            addToCart(plant)
                         }}
                         className='w-full p-2 mt-2 bg-brand-primary hover:bg-brand-primary-dark active:scale-95 duration-300 text-xs md:text-sm text-neutral-100 rounded-md cursor-pointer'
                     >

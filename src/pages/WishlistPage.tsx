@@ -9,14 +9,11 @@ const WishlistPage = () => {
         <h1 className='text-2xl text-center border-b border-neutral-300 pb-2'>My Wishlist</h1>
         <h2 className='md:text-lg uppercase font-medium mt-4'>Your Saved Items</h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 mt-4'>
-            {wishlist.map((plantInfo, index) => {
+            {wishlist.map((plantInfo) => {
                 return(
                 <WishlistProductCard
-                    key={index}
-                    id={plantInfo.id}
-                    name={plantInfo.name}
-                    price={plantInfo.price}
-                    imgurl={plantInfo.imgurl}
+                    key={plantInfo.id}
+                    plant={plantInfo}
                 />
                 )
             })}

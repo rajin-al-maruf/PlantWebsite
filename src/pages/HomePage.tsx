@@ -5,8 +5,15 @@ import Hero from '../components/Hero'
 import Spinner from '../components/Spinner'
 import PopularProducts from '../components/PopularProducts'
 import FeaturedProduct from '../components/FeaturedProduct'
+import type { Plant } from '../App'
+import type { Dispatch, SetStateAction } from 'react'
 
-const HomePage = ({plants, setPlants}) => {
+interface HomePageProps {
+  plants: Plant[]
+  setPlants: Dispatch<SetStateAction<Plant[]>>
+}
+
+const HomePage = ({plants, setPlants}: HomePageProps) => {
 
   const [isLoading, setIsLoading] = useState(false)
 

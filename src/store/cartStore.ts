@@ -1,8 +1,22 @@
 import { toast } from "sonner";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { Plant } from "../App"
 
-const useCartStore = create(
+export interface CartItem extends Plant {
+  quantity: number;
+}
+
+interface CartStore {
+  cart: CartItem[];
+  addToCart: (product: Plant, quantity?: number) => void;
+  removeFromCart: (id: Plant["id"]) => void;
+  clearCart: () => void;
+  increaseQuantity: (id: Plant["id"]) => void;
+  decreaseQuantity: (id: Plant["id"]) => void;
+}
+
+const useCartStore = create<CartStore>()(
   persist(
     (set) => ({
       cart: [],

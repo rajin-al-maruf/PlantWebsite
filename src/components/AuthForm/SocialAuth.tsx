@@ -2,7 +2,11 @@ import { toast } from "sonner";
 import { supabase } from "../../supabase";
 import { FcGoogle } from "react-icons/fc";
 
-const SocialAuth = ({isLogin}) => {
+interface SocialAuthProps {
+    isLogin: boolean;
+}
+
+const SocialAuth = ({isLogin}: SocialAuthProps) => {
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",

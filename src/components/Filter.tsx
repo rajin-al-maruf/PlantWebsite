@@ -1,13 +1,23 @@
-import { useState } from 'react'
+import { useState, type Dispatch, type SetStateAction } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
+import type { FilterState } from '../pages/ShopPage'
+import type { FilterOption } from '../filterInfo'
 
-const Filter = ({id, title, options, filter, setFilter, filterType}) => {
+interface FilterProps {
+    title: string;
+    options: string[];
+    filter: FilterState;
+    setFilter: Dispatch<SetStateAction<FilterState>>;
+    filterType: FilterOption['id'];
+}
+
+const Filter = ({title, options, filter, setFilter, filterType}: FilterProps) => {
 
     // console.log(id)
 
     const [openFilter, setOpenFilter] = useState(true);
 
-    const handleCheckboxChange = (filterType, option) => {
+    const handleCheckboxChange = (option: string) => {
         setFilter((prev) => {
             let updateFilter = [...prev[filterType]]
 
@@ -44,7 +54,7 @@ const Filter = ({id, title, options, filter, setFilter, filterType}) => {
                             <input 
                                 type="checkbox" 
                                 className="rounded-md size-4 accent-brand-primary" 
-                                onChange={() => handleCheckboxChange(filterType, option)}
+                        onChange={() => handleCheckboxChange(option)}
                                 checked={filter[filterType].includes(option)}
                             />
                             <span className="ml-2 text-sm">{option}</span>

@@ -3,10 +3,20 @@ import {supabase} from '../../supabase'
 import {useNavigate} from 'react-router-dom'
 import SocialAuth from './SocialAuth'
 import { toast } from 'sonner'
+import type { Dispatch, SetStateAction, ChangeEvent, SubmitEvent } from 'react'
 
-const LogIn = ({isLogin, setIsLogin}) => {
+interface LoginProps {
+    isLogin: boolean;
+    setIsLogin: Dispatch<SetStateAction<boolean>>;
+}
+interface loginForm {
+    email: string;
+    password: string;
+}
 
-    const [loginForm, setLoginForm] = useState({
+const LogIn = ({isLogin, setIsLogin}: LoginProps) => {
+
+    const [loginForm, setLoginForm] = useState<loginForm>({
             email: '',
             password: '',
         })
@@ -15,7 +25,7 @@ const LogIn = ({isLogin, setIsLogin}) => {
     
     console.log(loginForm)
 
-    const handleSignup = async (e) => {
+    const handleSignup = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
 //check the email,pass from supabase auth system
@@ -35,7 +45,7 @@ const LogIn = ({isLogin, setIsLogin}) => {
         
     }
 
-    const handleFormChange = (e) => {
+    const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
         setLoginForm((prev) => ({
             ...prev,
             [e.target.name] : e.target.value 

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../supabase';
 import { toast } from 'sonner';
+import type { Plant } from '../../App';
+import Spinner from '../../components/Spinner';
 
 const Products = () => {
 
   const [isLoading, setIsLoading] = useState(false)
-  const [plants, setPlants] = useState([])
+  const [plants, setPlants] = useState<Plant[]>([])
 
   useEffect(() => {
       const fetchPlants = async () => {
@@ -17,11 +19,11 @@ const Products = () => {
           if(error){
             console.error("Supabase error:", error.message);
           }else{
-            setPlants(data)
+            setPlants((data as Plant[]) || [])
           }
   
         } catch (error) {
-          console.error("Unexpected error:", err);
+          console.error("Unexpected error:", error);
         }finally{
           setIsLoading(false)
         }
@@ -29,7 +31,7 @@ const Products = () => {
       fetchPlants()
     },[])
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: string) => {
       const confirmDelete = confirm("Are you sure you want to delete this product?");
       if (!confirmDelete) return;
 
@@ -54,6 +56,10 @@ const Products = () => {
         console.error("Unexpected error:", err);
       }
     };
+
+  if (isLoading) {
+    return <Spinner />
+  }
 
   return (
     <div >

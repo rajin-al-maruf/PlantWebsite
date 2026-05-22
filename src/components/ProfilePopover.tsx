@@ -1,15 +1,25 @@
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useRef, type Dispatch, type SetStateAction } from "react";
 import { supabase } from "../supabase";
 import { CiUser } from "react-icons/ci";
 import { PiSpinner } from "react-icons/pi";
 import useClickOutside from "../hooks/useClickOutside";
 import { toast } from "sonner";
+import type { User } from "@supabase/supabase-js";
 
-const ProfilePopover = ({ user, showPopover, setShowPopover }) => {
-  const [profile, setProfile] = useState();
+interface ProfilePopoverProps {
+  user: User;
+  setShowPopover: Dispatch<SetStateAction<boolean>>;
+}
+
+interface ProfileData {
+  full_name: string;
+}
+
+const ProfilePopover = ({ user, setShowPopover }: ProfilePopoverProps) => {
+  const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true)
 
-  const popoverRef = useRef(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(popoverRef, () => {
     setShowPopover(false);

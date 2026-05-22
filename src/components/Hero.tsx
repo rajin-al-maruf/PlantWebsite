@@ -1,14 +1,13 @@
 import { GoArrowRight } from 'react-icons/go'
 import { PiPhoneCallThin } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
-import bg from '/assets/bg-web.jpg'
 
 const Hero = () => {
   return (
     <div className="w-full h-screen bg-brand-accent relative overflow-hidden">
 
       <img 
-        src={bg} 
+        src='/assets/bg-web.jpg'
         alt="" 
         className='absolute top-0 left-0 w-full h-full object-cover z-0'
       />

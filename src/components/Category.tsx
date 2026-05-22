@@ -1,7 +1,12 @@
 import categoryInfo from "../categoryInfo"
+import type { Plant } from "../App";
+
+interface CategoryProps {
+  plants: Plant[];
+}
 
 
-const Category = ({plants}) => {
+const Category = ({plants}: CategoryProps) => {
 
   return (
     <div className='max-w-6xl 2xl:max-w-7xl mx-auto my-32 flex flex-col items-center justify-center px-4 md:px-6 lg:px-8 xl:px-0'>

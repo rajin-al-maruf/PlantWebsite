@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { IoIosArrowDown } from 'react-icons/io'
 import useCartStore from '../store/cartStore'
@@ -9,24 +9,27 @@ import SkeletonCard from '../components/SkeletonCard'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { CiHeart } from 'react-icons/ci'
 import ProductCard from '../components/ProductCard'
+import type { Plant } from "../App";
 
-const ProductPage = ({plants, setPlants}) => {
+const ProductPage = () => {
 
   const [isLoading, setIsLoading] = useState(false)
   //it will get the id from the url ex: /product/1  then id=1
-  const { id } = useParams()
-  const [product, setProduct] = useState();
+  const { id } = useParams<{ id: string }>()
+  const [product, setProduct] = useState<Plant>();
+  const [similarPlants, setSimilarPlants] = useState<Plant[]>([]);
 
   const navigate = useNavigate()
 
   //that retrived {id} will be used to fetch the product from the database whenever the id changes
   useEffect(() => {
     const fetchProduct = async () => {
+      if (!id) return;
       setIsLoading(true)
       const { data, error } = await supabase .from("plants").select("*").eq("id", id).single();
 
       if (error) console.error(error);
-      else setProduct(data);
+      else setProduct(data as Plant);
       setIsLoading(false)
     };
 
@@ -49,7 +52,7 @@ const ProductPage = ({plants, setPlants}) => {
         if(error){
           console.error("Supabase error:", error.message);
         }else{
-          setPlants(data)
+          setSimilarPlants((data as Plant[]) || [])
         }
 
       } catch (error) {
@@ -60,7 +63,6 @@ const ProductPage = ({plants, setPlants}) => {
     }
     fetchAllPlants()
   },[product])
-console.log(plants)
 
   //get the function from the store
   const addToCart = useCartStore((state) => state.addToCart)
@@ -144,16 +146,16 @@ console.log(plants)
           <div className='mt-4'>
             <div className='grid grid-cols-10 gap-4'>
               <button
-                onClick={(e) => {
-                  addToCart({id: product.id, name: product.name, price: product.price, imgurl: product.imgurl, availability: product.availability, carelevel: product.carelevel}, qty)
+                onClick={() => {
+                  addToCart(product, qty)
                 }}
                 className="w-full col-span-9 p-2 text-brand-primary hover:text-neutral-100 border-2 border-brand-primary hover:bg-brand-primary duration-300 text-xs md:text-sm rounded-md cursor-pointer active:scale-95"
               >
                 ADD TO CART
               </button>
               <button
-                onClick={(e) => {
-                  addToWishlist({id: product.id, name: product.name, price: product.price, imgurl: product.imgurl})
+                onClick={() => {
+                  addToWishlist(product)
                 }}
                 className="w-full col-span-1 flex items-center justify-center p-2 text-brand-primary hover:text-neutral-100 border-2 border-brand-primary hover:bg-brand-primary duration-300 text-xs md:text-sm rounded-md cursor-pointer active:scale-95"
               >
@@ -162,8 +164,8 @@ console.log(plants)
             </div>
             <button
               className="w-full flex items-center justify-center p-2 mt-2 bg-brand-primary hover:bg-brand-primary-dark duration-300 text-xs md:text-sm text-neutral-100 rounded-md cursor-pointer active:scale-95"
-              onClick={(e) => {
-                addToCart({id: product.id, name: product.name, price: product.price, imgurl: product.imgurl, availability: product.availability, carelevel: product.carelevel}, qty)
+              onClick={() => {
+                addToCart(product, qty)
                 navigate('/checkout')
               }}
             >
@@ -180,15 +182,10 @@ console.log(plants)
           Similar Category
         </h1>
         <div className='grid grid-cols-2 lg:grid-cols-4 mt-10 gap-6 lg:gap-8 col-span-4 md:col-span-3'>
-            {plants.map((plant, index) => (
+            {similarPlants.map((plant) => (
               <ProductCard
-                key={index}
-                id={plant.id}
-                name={plant.name}
-                price={plant.price}
-                imgurl={plant.imgurl}
-                availability={plant.availability}
-                carelevel={plant.carelevel}
+                key={plant.id}
+                plant={plant}
               />
             ))}
           </div>

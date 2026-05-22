@@ -1,8 +1,13 @@
 import ProductCard from "./ProductCard"
 import { GoArrowRight } from "react-icons/go"
 import { Link } from "react-router-dom"
+import type { Plant } from "../App";
 
-const PopularProducts = ({plants}) => {
+interface PopularProductsProps {
+  plants: Plant[];
+}
+
+const PopularProducts = ({plants}: PopularProductsProps) => {
   return (
     <div className='max-w-6xl 2xl:max-w-7xl mx-auto my-32 flex flex-col items-center justify-center px-4 md:px-6 lg:px-8 xl:px-12 2xl:px-0'>
         <p className="bg-brand-primary-light text-white text-xs p-2 rounded-full">Most Popular</p>
@@ -10,15 +15,10 @@ const PopularProducts = ({plants}) => {
             Discover Our Products
         </h2>
         <div className='w-full mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-            {plants.slice(0,8).map((plant, index) => (
+            {plants.slice(0,8).map((plant) => (
               <ProductCard
-                key={index}
-                id={plant.id}
-                name={plant.name}
-                price={plant.price}
-                imgurl={plant.imgurl}
-                availability={plant.availability}
-                carelevel={plant.carelevel}
+                key={plant.id}
+                plant={plant}
               />
             ))}
         </div>
