@@ -6,7 +6,6 @@ import { IoCloseOutline } from 'react-icons/io5'
 import { Link, useNavigate } from 'react-router-dom'
 import useCartStore from '../store/cartStore'
 import useWishlistStore from '../store/wishlistStore'
-import ProfilePopover from './ProfilePopover'
 import { useAuth } from '../AuthContext'
 import { supabase } from '../supabase'
 import useClickOutside from '../hooks/useClickOutside'
@@ -85,167 +84,174 @@ const Navbar = () => {
 // Returns auth user only. ref:Authcontext.jsx
   const {user} = useAuth()
   const navigate = useNavigate()
-  const [showPopover, setShowPopover] = useState(false)
 
   return (
     <nav className='absolute w-full z-50 top-0 left-0'>
 
       {/* Mobile Navbar for smaller than md screens */}
-          <div className='block mt-4 md:hidden px-4'>
-          <div className='flex items-center justify-between'>
-            <button 
-              onClick={() => setShowSideNav(true)}
-              className='cursor-pointer text-brand-accent'
-            >
-              <HiOutlineMenuAlt2 size={20} />
-            </button>
-            <div className='flex gap-2'>
-              <div>
-                <button
-                  onClick={() => {
-                    cart.length > 0 ? navigate('/cart') : navigate('/shop')
-                  }}
-                  className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-                  <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{cart.length}</div>
-                  <PiShoppingCartSimpleLight size={20}/>
-                </button>
-              </div>
-              <Link to="/auth">
-                <button className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-                  <CiUser size={20}/>
-                </button>
-              </Link>
+      <div className={`md:hidden fixed top-0 left-0 w-full z-50 transition-transform duration-300 bg-white/90 backdrop-blur-md border-b border-neutral-200/50 shadow-sm ${showTopNav ? 'translate-y-0' : '-translate-y-full'}`}>
+          <div className='flex items-center justify-between px-4 py-3'>
+            <div className='flex items-center gap-3'>
+              <button 
+                onClick={() => setShowSideNav(true)}
+                className='text-brand-primary-dark hover:text-brand-primary transition-colors cursor-pointer p-1'
+              >
+                <HiOutlineMenuAlt2 size={24} />
+              </button>
+              <Link to='/'><img src="/assets/BonomayaLogo.jpg" className='w-8 h-8 rounded-full shadow-sm' alt="BonomayaLogo" /></Link>
+            </div>
+            
+            <div className='flex items-center gap-1 relative'>
+              <button
+                onClick={() => {
+                  if (cart.length > 0) { navigate('/cart'); } else { navigate('/shop'); toast.info("Your cart is empty"); }
+                }}
+                className='w-10 h-10 relative text-neutral-600 hover:bg-brand-primary/10 hover:text-brand-primary rounded-full flex items-center justify-center cursor-pointer transition-colors'>
+                <div className='absolute top-1 right-1 w-4 h-4 bg-brand-primary text-white text-[9px] font-bold flex items-center justify-center rounded-full border-2 border-white'>{cart.length}</div>
+                <PiShoppingCartSimpleLight size={22}/>
+              </button>
+              <button 
+                onClick={() => {
+                  if (user) {
+                    navigate('/profile')
+                  } else {
+                    navigate('/auth')
+                  }
+                }}
+                className='w-10 h-10 text-neutral-600 hover:bg-brand-primary/10 hover:text-brand-primary rounded-full flex items-center justify-center cursor-pointer transition-colors overflow-hidden border border-transparent hover:border-brand-primary/30'>
+                {user?.user_metadata?.avatar_url ? (
+                  <img src={user.user_metadata.avatar_url} className="w-full h-full object-cover" alt="Profile" />
+                ) : (
+                  <CiUser size={22}/>
+                )}
+              </button>
             </div>
           </div>
-          <div className={showSideNav?
-                  'fixed w-[80%] h-screen top-0 left-0 p-4 bg-brand-primary-light ease-in-out duration-500 z-50'
-                : 'fixed top-0 -left-full w-full h-screen p-4 bg-brand-primary-light ease-in-out duration-500 z-50'
-            }
-          >
-          <button
-            onClick={() => setShowSideNav(false)}
-            className="absolute top-4 right-6 hover:text-brand-accent cursor-pointer"
-          >
-            <IoCloseOutline size={28} />
-          </button>
-          <img src="/assets/BonomayaLogo.jpg" className='w-14 mt-6 rounded-full' alt="BonomayaLogo" />
-          <ul className='flex flex-col mt-8 gap-4 md:gap-6'>
-            <li className='cursor-pointer pb-4 border-b border-b-brand-primary text-brand-primary-dark hover:text-brand-accent font-semibold '>
-              <Link to="/">Home</Link>
-            </li>
-            <li className='cursor-pointer pb-4 border-b border-b-brand-primary text-brand-primary-dark hover:text-brand-accent font-semibold '>
-              <Link to="/shop">Shop</Link>
-            </li>
-            <li className='cursor-pointer pb-4 border-b border-b-brand-primary text-brand-primary-dark hover:text-brand-accent font-semibold '>About</li>
-            <li className='cursor-pointer pb-4 text-brand-primary-dark hover:text-brand-accent font-semibold '>Contact</li>
-          </ul>
-        </div>
+          
+          {/* Side Nav Overlay */}
+          <div className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300 h-screen ${showSideNav ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setShowSideNav(false)} />
+          
+          {/* Side Nav Panel */}
+          <div className={`fixed top-0 left-0 w-[80%] max-w-sm h-screen bg-white shadow-2xl transition-transform duration-500 z-50 flex flex-col ${showSideNav ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className="flex items-center justify-between p-6 border-b border-neutral-100">
+              <img src="/assets/BonomayaLogo.jpg" className='w-12 h-12 rounded-full shadow-sm' alt="BonomayaLogo" />
+              <button
+                onClick={() => setShowSideNav(false)}
+                className="p-2 text-neutral-400 hover:text-red-500 transition-colors cursor-pointer bg-neutral-50 hover:bg-red-50 rounded-full"
+              >
+                <IoCloseOutline size={24} />
+              </button>
+            </div>
+            <ul className='flex flex-col py-6 px-8 gap-6'>
+              <li><Link to="/" onClick={() => setShowSideNav(false)} className='block text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>Home</Link></li>
+              <li><Link to="/shop" onClick={() => setShowSideNav(false)} className='block text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>Shop</Link></li>
+              <li><Link to="/about" onClick={() => setShowSideNav(false)} className='block text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>About</Link></li>
+              <li><Link to="/contact" onClick={() => setShowSideNav(false)} className='block text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>Contact</Link></li>
+            </ul>
+          </div>
       </div>
 
       {/* Top Navbar for md and larger screens */}
       <div 
-        className={`max-w-6xl 2xl:max-w-7xl mx-auto hidden md:block fixed left-0 right-0 z-50 md:px-6 lg:px-8 xl:px-0 transition-transform duration-300 
-        ${showTopNav ? "top-4 translate-y-0" : "top-0 -translate-y-full"}`}
+        className={`max-w-6xl 2xl:max-w-7xl mx-auto hidden md:block fixed left-0 right-0 z-50 md:px-6 lg:px-8 xl:px-0 transition-transform duration-500 ease-out 
+        ${showTopNav ? "top-6 translate-y-0" : "top-0 -translate-y-full"}`}
       >
 
-        <div className='bg-brand-accent/30 backdrop-blur-sm border border-brand-accent/30 px-4 py-2 rounded-full flex items-center justify-between shadow-lg'>
-          <div className='flex items-center gap-12 md:gap-10 lg:gap-14 xl:gap-18'>
-            <Link to='/'><img src="/assets/BonomayaLogo.jpg" className='w-14 rounded-full' alt="BonomayaLogo" /></Link>
-            <ul className='flex gap-4 md:gap-6 lg:gap-8'>
-              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>
-                <Link to="/">Home</Link>
-              </li>
-              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>
-                <Link to="/shop">Shop</Link>
-              </li>
-              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>About</li>
-              <li className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-xs md:text-sm font-semibold'>Contact</li>
+        <div className='bg-white/90 backdrop-blur-md border border-neutral-200/60 px-4 lg:px-6 py-2.5 rounded-full flex items-center justify-between shadow-lg shadow-neutral-200/20'>
+          <div className='flex items-center gap-8 lg:gap-12'>
+            <Link to='/' className="shrink-0"><img src="/assets/BonomayaLogo.jpg" className='w-12 h-12 rounded-full shadow-sm hover:scale-105 transition-transform duration-300' alt="BonomayaLogo" /></Link>
+            <ul className='flex items-center gap-6 lg:gap-8'>
+              <li><Link to="/" className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-sm font-bold tracking-wide transition-colors'>Home</Link></li>
+              <li><Link to="/shop" className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-sm font-bold tracking-wide transition-colors'>Shop</Link></li>
+              <li><Link to="/about" className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-sm font-bold tracking-wide transition-colors'>About</Link></li>
+              <li><Link to="/contact" className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-sm font-bold tracking-wide transition-colors'>Contact</Link></li>
             </ul>
           </div>
 
-          <div className='flex gap-4'>
+          <div className='flex items-center gap-2'>
 {/* Search */}
-            <div className='relative flex items-center justify-center'>
-              <input
-                type="text"
-                placeholder='Find Plants...'
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className='absolute -right-1 md:w-64 w-40 h-8 md:h-12 px-3 text-sm text-brand-primary-dark rounded-full border border-brand-accent focus:outline-none focus:md:w-80 focus:ring-brand-accent transition-all duration-300'
-
-              />
-              <button className='h-8 md:w-10 w-8 md:h-10 z-50 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-                <CiSearch size={20}/>
-              </button>
+            <div className='relative flex items-center' ref={dropdownRef}>
+              <div className='flex items-center bg-neutral-100 rounded-full px-3 py-2 border border-transparent focus-within:bg-white focus-within:border-brand-primary/30 focus-within:shadow-sm transition-all duration-300'>
+                <CiSearch size={20} className='text-neutral-500 shrink-0'/>
+                <input
+                  type="text"
+                  placeholder='Search plants...'
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className='bg-transparent border-none outline-none pl-2 w-32 md:w-40 lg:w-56 focus:w-48 lg:focus:w-72 text-sm text-brand-primary-dark placeholder-neutral-400 transition-all duration-300'
+                />
+              </div>
               
               {search && loading && (
-                <div className="absolute top-12 md:right-0 right-4 bg-brand-accent shadow-lg rounded-md p-2 w-80 max-h-80 overflow-y-auto z-50 text-center text-sm text-neutral-500">
-                  Loading...
+                <div className="absolute top-14 right-0 bg-white border border-neutral-100 shadow-xl rounded-2xl p-4 w-80 z-50 text-center text-sm text-brand-primary font-medium">
+                  <span className="animate-pulse">Searching...</span>
                 </div>
               )}
               {search && !loading && results.length > 0 && (
-                <div ref={dropdownRef} className="absolute top-12 md:right-0 right-4 bg-brand-accent shadow-lg rounded-md p-2 w-80 max-h-80 overflow-y-auto z-50">
+                <div className="absolute top-14 right-0 bg-white border border-neutral-100 shadow-2xl rounded-2xl p-2 w-80 max-h-96 overflow-y-auto z-50 flex flex-col gap-1">
                   {results.map((plant) => (
-                    <Link to={`/product/${plant.id}`} onClick={() => {handleCloseDropdown()}} key={plant.id} className='flex gap-4 mb-2'>
-                      <div className="flex items-center justify-center aspect-square overflow-hidden">
-                      <img 
-                          src={plant.imgurl} 
-                          alt={plant.name}
-                          className='w-8 sm:w-12 md:w-16 max-w-full max-h-full object-contain bg-brand-accent' 
-                        />
+                    <Link to={`/product/${plant.id}`} onClick={handleCloseDropdown} key={plant.id} className='flex items-center gap-4 p-2 hover:bg-neutral-50 rounded-xl transition-colors'>
+                      <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center shrink-0 p-1">
+                        <img src={plant.imgurl} alt={plant.name} className='w-full h-full object-cover mix-blend-multiply' />
                       </div>
-                      <div>
-                        <p className='text-sm'>{plant.name}</p>
-                        <p className='text-xs text-neutral-400'>{plant.availability}</p>
+                      <div className="flex-col flex-1 overflow-hidden">
+                        <p className='text-sm font-bold text-brand-primary-dark truncate'>{plant.name}</p>
+                        <p className='text-xs text-neutral-500 mt-0.5'>{plant.availability}</p>
                       </div>
+                      <p className='text-sm font-semibold text-brand-primary'>Tk {plant.price}</p>
                     </Link>
                   ))}
                 </div>
               )}
             </div>
-            <button
-              onClick={() => {
-                if(wishlist.length > 0){
-                  navigate('/wishlist')
-                }else{
-                  navigate('/shop')
-                  toast.info("Your wishlist is empty")
-                }
-                  
-              }}
-            >
-              <div className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-                <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{wishlist.length}</div>
-                  <CiHeart size={20}/>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                if(cart.length > 0){
-                  navigate('/cart')
-                }else{
-                  navigate('/shop')
-                  toast.info("Your cart is empty")
-                }
-              }}
-            >
-              <div className='h-8 md:w-10 w-8 md:h-10 relative bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-                <div className='min-w-4 h-4 px-[2px] text-[8px] md:text-[10px] leading-none top-0 right-0 bg-brand-primary border-brand-primary-dark text-brand-accent rounded-full absolute flex items-center justify-center'>{cart.length}</div>
-                <PiShoppingCartSimpleLight size={20}/>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                if (user) {
-                  setShowPopover((prev) => !prev)
-                } else {
-                  navigate('/auth')
-                }
-              }}
-              className='h-8 md:w-10 w-8 md:h-10 bg-brand-accent text-brand-primary rounded-full flex items-center justify-center cursor-pointer'>
-              <CiUser size={20}/>
-            </button>
-            {showPopover && user && <ProfilePopover user={user} setShowPopover={setShowPopover}/>}
+
+            {/* Actions */}
+            <div className="flex items-center gap-1 ml-2 pl-4 border-l border-neutral-200 relative">
+                <button
+                  onClick={() => {
+                    if(wishlist.length > 0){
+                      navigate('/wishlist')
+                    }else{
+                      navigate('/shop')
+                      toast.info("Your wishlist is empty")
+                    }
+                  }}
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-neutral-600 hover:bg-brand-primary/10 hover:text-brand-primary transition-colors relative cursor-pointer"
+                >
+                    <div className="absolute top-0 right-0 w-4 h-4 bg-brand-primary text-white text-[9px] font-bold flex items-center justify-center rounded-full border-2 border-white">{wishlist.length}</div>
+                    <CiHeart size={24} />
+                </button>
+                <button
+                  onClick={() => {
+                    if(cart.length > 0){
+                      navigate('/cart')
+                    }else{
+                      navigate('/shop')
+                      toast.info("Your cart is empty")
+                    }
+                  }}
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-neutral-600 hover:bg-brand-primary/10 hover:text-brand-primary transition-colors relative cursor-pointer"
+                >
+                    <div className="absolute top-0 right-0 w-4 h-4 bg-brand-primary text-white text-[9px] font-bold flex items-center justify-center rounded-full border-2 border-white">{cart.length}</div>
+                    <PiShoppingCartSimpleLight size={24} />
+                </button>
+                <button
+                  onClick={() => {
+                    if (user) {
+                      navigate('/profile')
+                    } else {
+                      navigate('/auth')
+                    }
+                  }}
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-neutral-600 hover:bg-brand-primary/10 hover:text-brand-primary transition-colors cursor-pointer overflow-hidden border border-transparent hover:border-brand-primary/30"
+                >
+                    {user?.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} className="w-full h-full object-cover" alt="Profile" />
+                    ) : (
+                      <CiUser size={24}/>
+                    )}
+                </button>
+            </div>
           </div>
         </div>
 

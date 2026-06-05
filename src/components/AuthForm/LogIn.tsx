@@ -53,40 +53,48 @@ const LogIn = ({isLogin, setIsLogin}: LoginProps) => {
     }
 
   return (
-    <div className='max-w-sm mx-auto flex flex-col justifu-center items-center bg-white px-8 py-12 rounded-lg shadow-lg'>
-        <h2 className='text-xl font-medium'>Login</h2>
+    <div className='w-full max-w-sm mx-auto flex flex-col justify-center items-center bg-white p-6 sm:p-8 border border-neutral-200 rounded-2xl shadow-sm'>
+        <div className="text-center mb-6">
+            <h2 className='text-2xl font-bold text-brand-primary-dark'>Welcome Back</h2>
+            <p className="text-neutral-500 mt-1 text-xs">Log in to access your account.</p>
+        </div>
 
-        <form onSubmit={handleSignup} className='w-full flex flex-col items-center justify-center gap-4 mt-8'>
+        <form onSubmit={handleSignup} className='w-full flex flex-col gap-3'>
             <input
-                className='border border-neutral-300 px-4 py-2  text-xs focus:outline-none focus:border-brand-primary w-full'
+                className='w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-brand-primary focus:bg-white transition-colors'
                 type="email" 
-                placeholder='Email'
+                placeholder='Email Address'
                 onChange={handleFormChange}
                 name='email'
                 value={loginForm.email}
+                required
             />
             <input
-                className='border border-neutral-300 px-4 py-2 text-xs focus:outline-none focus:border-brand-primary w-full'
+                className='w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-brand-primary focus:bg-white transition-colors'
                 type="password" 
                 placeholder='Password'
                 onChange={handleFormChange}
                 name='password'
                 value={loginForm.password}
+                required
             />
             <button 
-                className='bg-black hover:bg-brand-primary text-white px-4 py-2 text-sm transition-colors cursor-pointer w-full'
+                className='w-full py-2.5 mt-2 bg-brand-primary hover:bg-brand-primary-dark transition-colors text-white rounded-lg font-semibold text-sm cursor-pointer'
                 type='submit'
+                disabled={loading}
             >{loading? "Logging in...": "Login"}
             </button>
 
             <SocialAuth isLogin={isLogin}/>
 
-            <p className='text-xs text-neutral-600'>Already have an account? 
-                <span
+            <p className='text-xs text-neutral-500 text-center mt-2'>
+                Don't have an account? 
+                <button
+                    type="button"
                     onClick={() => setIsLogin(!isLogin)}
-                    className='text-black hover:text-brand-primary cursor-pointer ml-1'>
+                    className='text-brand-primary hover:text-brand-primary-dark font-semibold cursor-pointer ml-1 transition-colors'>
                         Sign Up
-                </span>
+                </button>
             </p>
         </form>
     </div>

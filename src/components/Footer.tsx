@@ -1,74 +1,84 @@
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
-    <footer className='w-full bg-brand-primary-dark text-white px-4 md:px-6 lg:px-8 xl:px-0'>
-        <div className='max-w-6xl 2xl:max-w-7xl mx-auto py-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 border-b border-b-brand-primary-light'>
-            <div className='flex flex-col items-center sm:block'>
-                <img src='/assets/BonomayaLogo.jpg' className='w-14 rounded-full' alt="BonomayaLogo" />
-                <p className='mt-4 text-sm text-brand-accent text-center sm:text-start'>
-                    Welcome to Bonomaya. Your trusted source for beautiful, low-maintenance indoor plants that bring life and freshness to your home and workspace.
+    <footer className='w-full bg-brand-primary-dark text-white pt-20 pb-6 px-4 md:px-6 lg:px-8 xl:px-0'>
+        <div className='max-w-6xl 2xl:max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 border-b border-white/10 pb-16'>
+            
+            {/* Brand Section */}
+            <div className='lg:col-span-4 flex flex-col items-center md:items-start text-center md:text-left'>
+                <div className="flex items-center gap-3">
+                    <img src='/assets/BonomayaLogo.jpg' className='w-12 h-12 rounded-full shadow-md' alt="BonomayaLogo" />
+                    <span className="text-2xl font-bold tracking-wide">Bonomaya</span>
+                </div>
+                <p className='mt-6 text-sm text-gray-300 leading-relaxed max-w-sm'>
+                    Your trusted source for beautiful, low-maintenance indoor plants that bring life, freshness, and a touch of serenity to your space.
                 </p>
-                <div className='flex gap-4 mt-8'>
-                    <div className='w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-brand-primary-light'>
+                <div className='flex gap-3 mt-8'>
+                    <div className='w-9 h-9 bg-white/5 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand-primary hover:-translate-y-1 transition-all duration-300'>
                         <FaFacebookF size={14}/>
                     </div>
-                    <div className='w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-brand-primary-light'>
+                    <div className='w-9 h-9 bg-white/5 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand-primary hover:-translate-y-1 transition-all duration-300'>
                         <FaInstagram size={14}/>
                     </div>
-                    <div className='w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-brand-primary-light'>
+                    <div className='w-9 h-9 bg-white/5 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand-primary hover:-translate-y-1 transition-all duration-300'>
                         <FaXTwitter size={14}/>
                     </div>
-                    <div className='w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-brand-primary-light'>
+                    <div className='w-9 h-9 bg-white/5 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand-primary hover:-translate-y-1 transition-all duration-300'>
                         <FaLinkedinIn size={14}/>
                     </div>
                 </div>
             </div>
-            <div className='grid grid-cols-2 gap-16'>
-                <div className='text-center sm:text-start'>
-                    <h3 className='text-xl font-semibold'>Useful Links</h3>
-                    <ul className='mt-4 text-sm text-brand-accent flex flex-col gap-4'>
-                        <li className='cursor-pointer hover:text-white hover:underline'>Contact Us</li>
-                        <li className='cursor-pointer hover:text-white hover:underline'>Find Store</li>
-                        <li className='cursor-pointer hover:text-white hover:underline'>About Us</li>
-                        <li className='cursor-pointer hover:text-white hover:underline'>Our Location</li>
-                        <li className='cursor-pointer hover:text-white hover:underline'>Our Gallery</li>
-                    </ul>
-                </div>
-                <div className='text-center sm:text-start'>
-                    <h3 className='text-xl font-semibold'>Help Center</h3>
-                    <ul className='mt-4 text-sm text-brand-accent flex flex-col gap-4'>
-                        <li className='cursor-pointer hover:text-white hover:underline'>FAQ</li>
-                        <li className='cursor-pointer hover:text-white hover:underline'>Terms & Condition</li>
-                        <li className='cursor-pointer hover:text-white hover:underline'>Return Policy</li>
-                        <li className='cursor-pointer hover:text-white hover:underline'>Reporting</li>
-                        <li className='cursor-pointer hover:text-white hover:underline'>Privacy</li>
-                    </ul>
-                </div>
+            
+            {/* Quick Links */}
+            <div className='lg:col-span-2 lg:pl-10 flex flex-col items-center md:items-start'>
+                <h3 className='text-sm font-bold tracking-widest uppercase text-white mb-6'>Explore</h3>
+                <ul className='text-sm text-gray-300 flex flex-col gap-4 text-center md:text-left'>
+                    <li><Link to="/shop" className='hover:text-brand-primary-light transition-colors duration-300'>Shop Plants</Link></li>
+                    <li><Link to="/shop" className='hover:text-brand-primary-light transition-colors duration-300'>New Arrivals</Link></li>
+                    <li><Link to="/shop?category=Beginner-Friendly" className='hover:text-brand-primary-light transition-colors duration-300'>Plant Care</Link></li>
+                    <li><Link to="/about" className='hover:text-brand-primary-light transition-colors duration-300'>About Us</Link></li>
+                </ul>
             </div>
-            <div className='flex flex-col items-center lg:block justify-center sm:col-span-2 lg:col-span-1'>
-                 <h3 className='text-xl font-semibold'>Join Our Newsletter</h3>
-                 <p className='mt-4 text-sm text-brand-accent text-center lg:text-start'>
-                    Subscribe for plant care tips, fresh arrivals, and exclusive offers plus enjoy 10% off your first order!
-                 </p>
-                 <input 
-                    type="email" 
-                    name="" 
-                    id=""
-                    placeholder='Email address'
-                    className='w-full h-10 mt-8 px-4 text-sm bg-brand-primary-light text-brand-accent placeholder:text-brand-accent rounded-full outline-none'
-                 />
-                 <button className='w-full h-10 mt-4 text-sm bg-brand-primary rounded-full cursor-pointer'>
-                    Subscribe Now
-                 </button>
+
+            {/* Support Links */}
+            <div className='lg:col-span-2 flex flex-col items-center md:items-start'>
+                <h3 className='text-sm font-bold tracking-widest uppercase text-white mb-6'>Support</h3>
+                <ul className='text-sm text-gray-300 flex flex-col gap-4 text-center md:text-left'>
+                    <li><Link to="/contact" className='hover:text-brand-primary-light transition-colors duration-300'>Contact Us</Link></li>
+                    <li><Link to="/" className='hover:text-brand-primary-light transition-colors duration-300'>FAQ</Link></li>
+                    <li><Link to="/" className='hover:text-brand-primary-light transition-colors duration-300'>Shipping & Returns</Link></li>
+                    <li><Link to="/" className='hover:text-brand-primary-light transition-colors duration-300'>Track Order</Link></li>
+                </ul>
+            </div>
+
+            {/* Newsletter */}
+            <div className='lg:col-span-4 flex flex-col items-center md:items-start text-center md:text-left'>
+                <h3 className='text-sm font-bold tracking-widest uppercase text-white mb-6'>Join Our Newsletter</h3>
+                <p className='text-sm text-gray-300 mb-4 leading-relaxed'>
+                    Subscribe for plant care tips, fresh arrivals, and exclusive offers.
+                </p>
+                <form className="w-full max-w-sm flex items-center bg-white/5 border border-white/10 rounded-full p-1 mt-2 focus-within:border-brand-primary/50 focus-within:bg-white/10 transition-colors">
+                    <input 
+                        type="email" 
+                        placeholder="Your email address" 
+                        className="bg-transparent border-none outline-none text-sm px-4 py-2 w-full text-white placeholder-gray-500" 
+                        required
+                    />
+                    <button type="submit" className="bg-brand-primary hover:bg-brand-primary-light text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors shrink-0 cursor-pointer">
+                        Subscribe
+                    </button>
+                </form>
             </div>
         </div>
-        <div className='max-w-7xl mx-auto py-4 text-brand-accent flex flex-col sm:flex-row gap-4 items-center justify-between'>
-            <p className='text-xs xl:text-sm'>© 2025 <span className='text-brand-primary-light'>Bonomaya</span>. All rights reserved.</p>
-            <div className='flex items-center text-xs xl:text-sm text-brand-accent'>
-                <p className='border-r border-r-brand-primary-light pr-2 lg:pr-6 cursor-pointer hover:text-white hover:underline'>Terms & Condition</p>
-                <p className='pl-2 lg:pl-6 cursor-pointer hover:text-white hover:underline'>Privacy Policy</p>
+        
+        <div className='max-w-6xl 2xl:max-w-7xl mx-auto pt-6 flex flex-col md:flex-row gap-4 items-center justify-between text-gray-400'>
+            <p className='text-xs xl:text-sm'>© {new Date().getFullYear()} <span className='text-white font-medium'>Bonomaya</span>. All rights reserved.</p>
+            <div className='flex items-center gap-6 text-xs sm:text-sm'>
+                <Link to="/" className='hover:text-white transition-colors duration-300'>Privacy Policy</Link>
+                <Link to="/" className='hover:text-white transition-colors duration-300'>Terms of Service</Link>
             </div>
         </div>
     </footer>

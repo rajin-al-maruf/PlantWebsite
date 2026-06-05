@@ -1,16 +1,14 @@
 import AdminSidebar from '../../components/AdminSidebar'
 import { Outlet } from 'react-router-dom'
-import Footer from '../../components/Footer'
 
 const AdminDashboard = () => {
   return (
     <div className='flex min-h-screen'>
       <AdminSidebar/>
-      <main className="flex-1">
-        <div className='px-6 py-4 pb-32 bg-neutral-100'>
+      <main className="flex-1 bg-neutral-50 min-h-screen">
+        <div className='p-8 md:p-10 lg:p-12 pb-32'>
           <Outlet/>
         </div>
-        <Footer />
       </main>
     </div>
   )

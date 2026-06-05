@@ -30,20 +30,20 @@ const HomePage = ({plants, setPlants}: HomePageProps) => {
       fetchProduct();
     }, []);
 
-    if (isLoading) {
-      return <Spinner />
-    }
-
   return (
     <div>
         <Hero />
-        <Category 
-          plants={plants}
-        />
-        <FeaturedProduct />
-        <PopularProducts 
-          plants={plants}
-        />
+        {isLoading ? (
+          <div className="py-32">
+            <Spinner />
+          </div>
+        ) : (
+          <>
+            <Category />
+            <FeaturedProduct />
+            <PopularProducts plants={plants} />
+          </>
+        )}
     </div>
   )
 }

@@ -26,6 +26,10 @@ export interface FilterState {
 const ShopPage = ({plants, setPlants}: ShopPageProps) => {
 
   const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  
+  const ITEMS_PER_PAGE = 9;
 
   const [filter, setFilter] = useState<FilterState>({
     category: [],
@@ -35,14 +39,19 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
   })
   const [sortBy, setSortBy] = useState("newest")
   const [tempFilter, setTempFilter] = useState<FilterState>(filter)
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
   
-  // console.log(filter[filterInfo[0].id])
+  const handleSetFilter: Dispatch<SetStateAction<FilterState>> = (value) => {
+    setFilter(value);
+    setPage(1);
+  };
 
   useEffect(() => {
     const fetchPlants = async () => {
       try {
         setIsLoading(true)
-        let plantData = supabase.from('plants').select('*')
+        let plantData = supabase.from('plants').select('*', { count: 'exact' })
 
         if(filter.category.length > 0){
           plantData = plantData.in("category", filter.category)
@@ -67,12 +76,18 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
           plantData = plantData.order("price", {ascending: false})
         }
 
-        const {data, error} = await plantData;
+        // Pagination logic
+        const from = (page - 1) * ITEMS_PER_PAGE;
+        const to = from + ITEMS_PER_PAGE - 1;
+        plantData = plantData.range(from, to);
+
+        const {data, error, count} = await plantData;
 
         if(error){
           console.error("Supabase error:", error.message);
         }else{
           setPlants((data as Plant[]) || [])
+          setTotalCount(count || 0)
         }
 
       } catch (error) {
@@ -82,7 +97,7 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
       }
     }
     fetchPlants()
-  },[filter, sortBy, setPlants])
+  },[filter, sortBy, page, setPlants])
 
   const [showFilters, setShowFilters] = useState(true)
 
@@ -93,31 +108,52 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
   return (
     <div className='max-w-6xl 2xl:max-w-7xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0'>
       <Breadcrumb/>
-      <div className='w-full h-72 relative overflow-hidden bg-neutral-200 my-4 rounded-lg'>
-        <img 
+      <div className='relative w-full h-64 md:h-80 my-8 rounded-[2.5rem] overflow-hidden group'>
+        <img
           src='/assets/shopPageImg.jpg'
-          alt="featured plant"
-          className='object-cover object-[35%_85%] w-full h-full absolute opacity-80'
+          alt="Shop Our Collection"
+          className='absolute inset-0 w-full h-full object-cover object-[35%_85%] transition-transform duration-1000 group-hover:scale-105'
         />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+        <div className="absolute inset-0 p-8 md:p-12 lg:p-16 flex flex-col justify-center text-white">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-brand-accent font-medium text-xs md:text-sm mb-4 w-max">
+                <span className="w-2 h-2 rounded-full bg-brand-primary-light animate-pulse"></span>
+                Bonomaya Shop
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Our Collection</h1>
+            <p className="max-w-md text-sm md:text-base text-gray-200 leading-relaxed">
+               Find the perfect green companion for your space. Explore our wide variety of healthy, beautiful indoor plants.
+            </p>
+        </div>
       </div>
-      <div className='w-full flex items-center justify-between'>
-        <div className='hidden md:block'>
-          Filters
+      
+      <div className='w-full flex items-center justify-between mb-8 pb-6 border-b border-neutral-200'>
+        <div className='hidden md:flex items-center gap-2'>
+          <CiFilter size={24} className="text-brand-primary"/>
+          <span className="font-semibold text-brand-primary-dark tracking-widest uppercase text-sm">Filters</span>
         </div>
         <div className='flex gap-2 items-center md:hidden'>
-          <p>Filter:</p>
-          <CiFilter onClick={() => setShowFilters(!showFilters)} size={30} className={showFilters? 'p-1 bg-neutral-200 border border-neutral-200 rounded-md cursor-pointer': 'p-1 border border-neutral-200 rounded-md cursor-pointer'}/>
-        </div> 
-        <div className='flex items-center gap-4'>
-          <p className='text-sm'>Sort by:</p>
-          <select 
-            className='px-2 py-1 text-sm border border-neutral-200 rounded-full outline-none'
-            value={sortBy}
-            onChange={(e) => {setSortBy(e.target.value)}}
+          <button
+             onClick={() => setShowFilters(!showFilters)}
+             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${showFilters ? 'bg-brand-primary text-white shadow-md' : 'bg-neutral-100 text-brand-primary-dark hover:bg-neutral-200'}`}
           >
-            <option value="newest">Newest</option>
-            <option value="low-to-high">Price(Low to High)</option>
-            <option value="high-to-low">Price(High to Low)</option>
+            <CiFilter size={20} />
+            Filters
+          </button>
+        </div>
+        <div className='flex items-center gap-3'>
+          <p className='text-sm text-neutral-500 font-medium hidden sm:block'>Sort by:</p>
+          <select 
+            className='px-4 py-2.5 text-sm bg-neutral-100 border-none text-brand-primary-dark font-medium rounded-full outline-none focus:ring-2 focus:ring-brand-primary/50 cursor-pointer appearance-none'
+            value={sortBy}
+            onChange={(e) => {
+              setSortBy(e.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="newest">Newest Arrivals</option>
+            <option value="low-to-high">Price: Low to High</option>
+            <option value="high-to-low">Price: High to Low</option>
           </select>
         </div>
       </div>
@@ -132,14 +168,15 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
                 title={info.title}
                 options={info.options}
                 filter={filter}
-                setFilter={setFilter}
+                setFilter={handleSetFilter}
               />
             )
           })}
           <button 
-              className='w-full text-sm py-4 underline cursor-pointer'
+              className='w-full text-sm py-3 mt-4 text-neutral-500 hover:text-brand-primary transition-colors hover:underline cursor-pointer rounded-full'
               onClick={() => {
                 setFilter({ category: [], carelevel: [], lightrequirement: [], availability: [] })
+                setPage(1);
               }}
               >
                 Clear Filters
@@ -161,18 +198,22 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
               )
             })}
               <button
-              className='w-full p-2 text-white text-sm bg-black mt-4 rounded-md cursor-pointer'
+              className='w-full p-3 text-white text-sm font-medium bg-brand-primary hover:bg-brand-primary-dark transition-colors duration-300 mt-6 rounded-full shadow-md cursor-pointer'
               onClick={() => {
                   setFilter(tempFilter)
+                  setPage(1);
                   setShowFilters(false)
               }}
               >
                 Apply All
               </button>
               <button 
-              className='w-full text-sm py-4 underline cursor-pointer'
+              className='w-full text-sm py-3 text-neutral-500 hover:text-brand-primary transition-colors hover:underline cursor-pointer rounded-full'
               onClick={() => {
-                setFilter({ category: [], carelevel: [], lightrequirement: [], availability: [] })
+                const emptyFilter = { category: [], carelevel: [], lightrequirement: [], availability: [] };
+                setTempFilter(emptyFilter);
+                setFilter(emptyFilter);
+                setPage(1);
               }}
               >
                 Clear Filters
@@ -182,22 +223,70 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
 {/* product cards */}
         {isLoading ? (
           <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'>
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: ITEMS_PER_PAGE }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
           </div>
         ) : plants.length > 0 ? (
-          <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 col-span-4 md:col-span-3'>
-            {plants.map((plant) => (
-              <ProductCard
-                key={plant.id}
-                plant={plant}
-              />
-            ))}
+          <div className='col-span-4 md:col-span-3 flex flex-col gap-12 pb-20'>
+            <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8'>
+              {plants.map((plant) => (
+                <ProductCard
+                  key={plant.id}
+                  plant={plant}
+                />
+              ))}
+            </div>
+            
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-8">
+                <button
+                  onClick={() => {
+                    setPage((prev) => Math.max(prev - 1, 1));
+                    window.scrollTo({ top: 350, behavior: 'smooth' });
+                  }}
+                  disabled={page === 1}
+                  className="px-4 py-2 rounded-full border border-neutral-200 text-sm font-medium hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Previous
+                </button>
+                
+                {Array.from({ length: totalPages }).map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setPage(idx + 1);
+                      window.scrollTo({ top: 350, behavior: 'smooth' });
+                    }}
+                    className={`w-10 h-10 rounded-full text-sm font-medium transition-colors ${
+                      page === idx + 1
+                        ? "bg-brand-primary text-white shadow-md"
+                        : "text-neutral-600 hover:bg-neutral-100"
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => {
+                    setPage((prev) => Math.min(prev + 1, totalPages));
+                    window.scrollTo({ top: 350, behavior: 'smooth' });
+                  }}
+                  disabled={page === totalPages}
+                  className="px-4 py-2 rounded-full border border-neutral-200 text-sm font-medium hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         ) : (
-          <div className='w-full mt-20 flex justify-center text-2xl text-neutral-600 col-span-3'>
-            <h2>NO PRODUCT FOUND</h2>
+          <div className='w-full mt-20 flex flex-col items-center justify-center text-neutral-400 col-span-1 md:col-span-3 gap-4'>
+             <div className="text-6xl mb-2">🌿</div>
+             <h2 className="text-2xl font-semibold text-brand-primary-dark">No plants found</h2>
+             <p className="text-sm">Try adjusting your filters to find what you're looking for.</p>
           </div>
         )}
 

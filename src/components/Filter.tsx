@@ -36,28 +36,26 @@ const Filter = ({title, options, filter, setFilter, filterType}: FilterProps) =>
     
   return (
     <div>
-        <div className='py-4 border-y border-y-neutral-200'>
-            <h3 onClick={()=> setOpenFilter(!openFilter)} className='flex items-center justify-between cursor-pointer'>
+        <div className='py-4 border-b border-neutral-100'>
+            <h3 onClick={()=> setOpenFilter(!openFilter)} className='flex items-center justify-between cursor-pointer text-brand-primary-dark font-semibold tracking-wide'>
                 {title}
                 <IoIosArrowDown 
                     size={20} 
-                    className={openFilter? 
-                        'transform rotate-180 duration-300 ease-in-out' : 
-                        'rotate-0 duration-300 ease-in-out'}
+                    className={`transition-transform duration-300 ease-in-out text-brand-primary ${openFilter ? 'rotate-180' : 'rotate-0'}`}
                     />
             </h3>
             {openFilter &&
-            <div className="space-y-4 pt-4">
+            <div className="space-y-3 pt-5">
                 {options.map((option, index) => {
                     return(
-                        <label key={index} className="flex items-center">
+                        <label key={index} className="flex items-center group cursor-pointer">
                             <input 
                                 type="checkbox" 
                                 className="rounded-md size-4 accent-brand-primary" 
                         onChange={() => handleCheckboxChange(option)}
                                 checked={filter[filterType].includes(option)}
                             />
-                            <span className="ml-2 text-sm">{option}</span>
+                            <span className="ml-3 text-sm text-neutral-600 group-hover:text-brand-primary transition-colors">{option}</span>
                         </label>
                     )
                 })}

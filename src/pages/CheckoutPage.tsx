@@ -3,6 +3,7 @@ import useCartStore from "../store/cartStore";
 import { useState } from "react";
 import type { ChangeEvent } from "react";
 import {supabase} from '../supabase'
+import { useAuth } from "../AuthContext";
 
 interface CheckoutForm {
     firstName: string;
@@ -24,6 +25,7 @@ const CheckoutPage = () => {
     const total = subtotal + shipping;
 
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [form, setForm] = useState<CheckoutForm>({
         firstName: '',
@@ -35,6 +37,7 @@ const CheckoutPage = () => {
     })
 
 const [error, setError] = useState<Partial<CheckoutForm>>({});
+const [isSubmitting, setIsSubmitting] = useState(false);
 
     const validateForm = () => {
         let tempError: Partial<CheckoutForm> = {};
@@ -44,6 +47,7 @@ const [error, setError] = useState<Partial<CheckoutForm>>({});
         if(!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) tempError.email = "Enter a valid email";
         if(!form.phone.match(/^\d{11}$/)) tempError.phone = "Enter a valid phone number";
         if(!form.address.trim()) tempError.address = "Address is required";
+        if(!form.paymentMethod) tempError.paymentMethod = "Please select a payment method";
 
         setError(tempError);
 
@@ -64,6 +68,7 @@ const [error, setError] = useState<Partial<CheckoutForm>>({});
         }
         if(!validateForm()) return;
         // Here you would typically send the order details to your backend server on click "PLACE ORDER"
+        setIsSubmitting(true);
         try {
             //1.push orderInfo to supabase table 'orders'
             const { data: orderInfo, error: orderError } = await supabase
@@ -77,6 +82,7 @@ const [error, setError] = useState<Partial<CheckoutForm>>({});
                         total_amount: total,
                         order_status: 'pending',
                         payment_method: form.paymentMethod,
+                        user_id: user?.id || null
                     }
                 ])
                 .select()
@@ -84,7 +90,7 @@ const [error, setError] = useState<Partial<CheckoutForm>>({});
 
             if (orderError) {
                 console.error('Error placing order:', orderError);
-                alert('There was an issue placing your order. Please try again.');
+                alert(`Order Error: ${orderError.message}\n\nCheck your console for more details.`);
                 return;
             } else {
                 console.log('Order placed successfully:', orderInfo);
@@ -107,6 +113,8 @@ const [error, setError] = useState<Partial<CheckoutForm>>({});
             
             if (itemsError) {
                 console.error('Error adding order items:', itemsError);
+                alert(`Items Error: ${itemsError.message}`);
+                return; // <--- This prevents the fake success redirect!
             } else {
                 console.log('Order items added successfully:', itemsData);
             }
@@ -127,210 +135,184 @@ const [error, setError] = useState<Partial<CheckoutForm>>({});
         } catch (error) {
             console.error('Checkout failed:', error);
             alert('An unexpected error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
         }
 
     }
     
   return (
-    <div className='max-w-6xl 2xl:max-w-7xl mx-auto mt-36 px-4 md:px-6 lg:px-8 xl:px-0'>
-        <h1 className='text-2xl text-center border-b border-neutral-300 pb-2'>Checkout</h1>
-{/* left side */}
-        <div className='grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-10'>
-            <div className='lg:col-span-3'>
-                <div className='shadow-lg mt-6 border border-neutral-300'>
-                    <h2 className='p-4 border-b-2 border-neutral-300 text-lg font-medium'>Shipping Address</h2>
+    <div className='max-w-6xl 2xl:max-w-7xl mx-auto mt-24 md:mt-32 px-4 md:px-6 lg:px-8 xl:px-0 pb-20'>
+        <div className="mb-10">
+            <h1 className='text-3xl md:text-4xl font-bold text-brand-primary-dark'>Checkout</h1>
+            <p className="text-neutral-500 mt-2 text-sm">Please provide your shipping and payment details.</p>
+        </div>
 
-                    <div className='px-4 py-6 mt-6'>
-                        <div className='sm:flex gap-6'>
+        <div className='grid grid-cols-1 lg:grid-cols-12 gap-12'>
+            {/* Left: Forms */}
+            <div className='lg:col-span-7 xl:col-span-8 flex flex-col gap-8'>
+                
+                {/* Shipping Address */}
+                <div className='bg-white border border-neutral-200 rounded-3xl p-6 sm:p-8'>
+                    <h2 className='text-xl font-bold text-brand-primary-dark mb-6'>Shipping Address</h2>
+
+                    <div className='space-y-6'>
+                        <div className='sm:flex gap-6 space-y-6 sm:space-y-0'>
                             <div className='w-full'>
-                                <label className='block text-sm font-medium mb-2'>First Name <span className='text-red-600'>*</span></label>
+                                <label className='block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2'>First Name <span className='text-red-500'>*</span></label>
                                 <input 
                                     type="text"
                                     name="firstName"
                                     value={form.firstName}
                                     onChange={handleFormChange}
-                                    className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                                    className='w-full p-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary focus:bg-white transition-colors'
                                 />
-                                {error.firstName && <p className="text-red-600 text-xs mt-1">{error.firstName}</p>}
+                                {error.firstName && <p className="text-red-500 text-xs mt-1">{error.firstName}</p>}
                             </div>
-                            <div className='w-full mt-6 sm:mt-0'>
-                                <label className='block text-sm font-medium mb-2'>Last Name <span className='text-red-600'>*</span></label>
+                            <div className='w-full'>
+                                <label className='block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2'>Last Name <span className='text-red-500'>*</span></label>
                                 <input 
                                     type="text"
                                     name="lastName"
                                     value={form.lastName}
                                     onChange={handleFormChange}
-                                    className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                                    className='w-full p-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary focus:bg-white transition-colors'
                                 />
-                                {error.lastName && <p className="text-red-600 text-xs mt-1">{error.lastName}</p>}
+                                {error.lastName && <p className="text-red-500 text-xs mt-1">{error.lastName}</p>}
                             </div>
                         </div>
-                        <div className='w-full mt-6'>
-                            <label className='block text-sm font-medium mb-2'>Email Address <span className='text-red-600'>*</span></label>
+                        <div className='w-full'>
+                            <label className='block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2'>Email Address <span className='text-red-500'>*</span></label>
                             <input 
                                 type='email'
                                 name="email"
                                 value={form.email}
                                 onChange={handleFormChange}
-                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                                className='w-full p-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary focus:bg-white transition-colors'
                             />
-                            {error.email && <p className="text-red-600 text-xs mt-1">{error.email}</p>}
+                            {error.email && <p className="text-red-500 text-xs mt-1">{error.email}</p>}
                         </div>
-                        <div className='w-full mt-6'>
-                            <label className='block text-sm font-medium mb-2'>Phone Number <span className='text-red-600'>*</span></label>
+                        <div className='w-full'>
+                            <label className='block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2'>Phone Number <span className='text-red-500'>*</span></label>
                             <input 
                                 type='text'
                                 name="phone"
                                 value={form.phone}
                                 onChange={handleFormChange} 
-                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                                className='w-full p-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary focus:bg-white transition-colors'
                             />
-                            {error.phone && <p className="text-red-600 text-xs mt-1">{error.phone}</p>}
+                            {error.phone && <p className="text-red-500 text-xs mt-1">{error.phone}</p>}
                         </div>
-                        <div className='w-full mt-6'>
-                            <label className='block text-sm font-medium mb-2'>Address <span className='text-red-600'>*</span></label>
+                        <div className='w-full'>
+                            <label className='block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2'>Address <span className='text-red-500'>*</span></label>
                             <input 
                                 type='text'
                                 name="address"
                                 value={form.address}
                                 onChange={handleFormChange} 
-                                className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'
+                                className='w-full p-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary focus:bg-white transition-colors'
                             />
-                            {error.address && <p className="text-red-600 text-xs mt-1">{error.address}</p>}
+                            {error.address && <p className="text-red-500 text-xs mt-1">{error.address}</p>}
                         </div>
-                        {/* I will add that functionality later */}
-                        {/* <div className='w-full mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6'>
-                            <div>
-                                <label className='block text-sm font-medium mb-2'>Division <span className='text-red-600'>*</span></label>
-                                <select className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'>
-                                    <option  value="Bangladesh">Bangladesh</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className='block text-sm font-medium mb-2'>District <span className='text-red-600'>*</span></label>
-                                <select className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'>
-                                    <option  value="Bangladesh">Bangladesh</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className='block text-sm font-medium mb-2'>Thana <span className='text-red-600'>*</span></label>
-                                <select className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'>
-                                    <option  value="Bangladesh">Bangladesh</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className='block text-sm font-medium mb-2'>Postal Code <span className='text-red-600'>*</span></label>
-                                <input type='email' className='w-full p-3 border border-neutral-300 text-sm text-neutral-600 focus:outline-brand-primary-light'/>
-                            </div>
-                        </div> */}
                         
-                        <div className="flex mt-10">
-                            <input type="checkbox"/>
-                            <p className="pl-2 text-neutral-600 text-sm">My billing and shipping address are the same</p>
+                        <div className="flex items-center pt-2">
+                            <input type="checkbox" className="w-4 h-4 accent-brand-primary rounded border-neutral-300 cursor-pointer"/>
+                            <p className="pl-3 text-neutral-600 text-sm font-medium">My billing and shipping address are the same</p>
                         </div>
                     </div>
                 </div>
 
-                <div className='shadow-lg mt-6 border border-neutral-300'>
-                    <h2 className='p-4 border-b-2 border-neutral-300 text-lg font-medium'>Payment Method</h2>
+                {/* Payment Method */}
+                <div className='bg-white border border-neutral-200 rounded-3xl p-6 sm:p-8'>
+                    <h2 className='text-xl font-bold text-brand-primary-dark mb-6'>Payment Method</h2>
 
-                    <div className='px-4 py-6'>
-                        <div className="flex items-center">
+                    <div className='space-y-3'>
+                        <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${form.paymentMethod === 'cards' ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:bg-neutral-50'}`}>
                             <input
                                 type="radio"
                                 name="paymentMethod"
                                 value="cards"
                                 checked={form.paymentMethod === 'cards'}
                                 onChange={handleFormChange}
+                                className="w-4 h-4 accent-brand-primary"
                             />
-                            <label className="pl-2 text-neutral-600 text-sm">
-                                Debit/Credit cards and mobile money
-                            </label>
-                            </div>
+                            <span className="ml-3 font-medium text-sm text-brand-primary-dark">Debit / Credit Card / Mobile Money</span>
+                        </label>
 
-                            <div className="flex items-center mt-4">
+                        <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${form.paymentMethod === 'mobileBanking' ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:bg-neutral-50'}`}>
                             <input
                                 type="radio"
                                 name="paymentMethod"
                                 value="mobileBanking"
                                 checked={form.paymentMethod === 'mobileBanking'}
                                 onChange={handleFormChange}
+                                className="w-4 h-4 accent-brand-primary"
                             />
-                            <label className="pl-2 text-neutral-600 text-sm">Mobile Banking</label>
-                            </div>
+                            <span className="ml-3 font-medium text-sm text-brand-primary-dark">Mobile Banking</span>
+                        </label>
 
-                            <div className="flex items-center mt-4">
+                        <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${form.paymentMethod === 'cod' ? 'border-brand-primary bg-brand-primary/5' : 'border-neutral-200 hover:bg-neutral-50'}`}>
                             <input
                                 type="radio"
                                 name="paymentMethod"
                                 value="cod"
                                 checked={form.paymentMethod === 'cod'}
                                 onChange={handleFormChange}
+                                className="w-4 h-4 accent-brand-primary"
                             />
-                            <label className="pl-2 text-neutral-600 text-sm">Cash on delivery</label>
-                        </div>
+                            <span className="ml-3 font-medium text-sm text-brand-primary-dark">Cash on delivery</span>
+                        </label>
+                        {error.paymentMethod && <p className="text-red-500 text-xs mt-2 font-bold px-2">{error.paymentMethod}</p>}
                     </div>
                 </div>
             </div>
-{/* right side */}
-            <div className="lg:col-span-2">
-                <div className='shadow-lg mt-6 border border-neutral-300'>
-                    <h2 className='p-4 border-b-2 border-neutral-300 text-lg font-medium'>Order Review</h2>
-
-                    <div className="p-4">
-                        <div className="flex items-center justify-between border-b border-b-neutral-300 p-2">
-                            <p>Finalized Items</p>
-                            <p>Subtotal</p>
-                        </div>
-
-                        <div>
-                            {cart.map((items, index) => {
-                                return(
-                                    <div key={index} className='flex gap-4 px-2 py-4 border-t border-t-neutral-300'>
-                                        <Link to={`/product/${items.id}`}>
-                                            <img 
-                                                src={items.imgurl} 
-                                                alt={items.name}
-                                                className='w-20 sm:w-28 md:w-32 bg-neutral-100'
-                                            />
-                                        </Link>
-                                        <div className="w-full flex justify-between">
-                                            <div>
-                                                <p className='font-medium'>{items.name}</p>
-                                                <p className='text-xs mt-1 text-neutral-600'>Care Level: {items.carelevel}</p>
-                                                <p className="text-xs mt-1 text-neutral-600">Quantity: {items.quantity}</p>
-                                            </div>
-                                            <div className="flex flex-col justify-between items-end">
-                                                <p className="text-sm sm:text-base font-medium">Tk {items.price * items.quantity}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-
-                        <div className="flex items-center justify-between border-t border-t-neutral-300 p-2">
-                            <p>Subtotal</p>
-                            <p className="font-medium">Tk {subtotal}</p>
-                        </div>
-                        <div className="flex items-start justify-between border-t border-t-neutral-300 p-2">
-                            <div className="w-[75%]">
-                                <p>Shipping</p>
-                                <p className="text-xs mt-2 text-neutral-600">Standard Shipping: within 3-4 days inside Dhaka, within 4-7 days outside Dhaka</p>
+            
+            {/* Right: Order Summary */}
+            <div className="lg:col-span-5 xl:col-span-4">
+                <div className="bg-neutral-50 rounded-3xl p-6 sm:p-8 border border-neutral-100 h-max sticky top-32">
+                    <h2 className="text-lg font-bold text-brand-primary-dark border-b border-neutral-200 pb-4 mb-6">Order Review</h2>
+                    
+                    <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 mb-6">
+                        {cart.map((item, index) => (
+                            <div key={index} className='flex gap-4 items-center'>
+                                <div className="w-16 h-16 bg-white border border-neutral-200 rounded-xl overflow-hidden flex items-center justify-center shrink-0">
+                                    <img src={item.imgurl} alt={item.name} className='w-full h-full object-cover' />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className='font-bold text-sm text-brand-primary-dark line-clamp-1'>{item.name}</h3>
+                                    <p className="text-xs text-neutral-500 mt-1">Qty: {item.quantity}</p>
+                                </div>
+                                <p className="text-sm font-bold text-brand-primary-dark">Tk {item.price * item.quantity}</p>
                             </div>
-                            <p className="font-medium">Tk {shipping}</p>
+                        ))}
+                    </div>
+
+                    <div className="space-y-4 text-sm text-neutral-600 mb-6 border-t border-neutral-200 pt-6">
+                        <div className="flex justify-between">
+                            <span>Subtotal</span>
+                            <span className="font-medium text-black">Tk {subtotal}</span>
                         </div>
-                        <div className="flex items-center justify-between p-2 bg-brand-accent">
-                            <p className="font-medium">Total</p>
-                            <p className="font-medium">Tk {total}</p>
+                        <div className="flex justify-between">
+                            <span>Shipping</span>
+                            <span className="font-medium text-black">Tk {shipping}</span>
                         </div>
                     </div>
+                    
+                    <div className="flex justify-between items-center border-t border-neutral-200 pt-6 mb-8">
+                        <span className="font-bold text-base text-brand-primary-dark">Total</span>
+                        <span className="font-bold text-xl text-brand-primary">Tk {total}</span>
+                    </div>
+                    
+                    <button 
+                        onClick={placeOrder}
+                        disabled={isSubmitting}
+                        className="w-full py-4 bg-brand-primary hover:bg-brand-primary-dark transition-colors text-white rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center cursor-pointer disabled:bg-neutral-400 disabled:cursor-not-allowed">
+                        {isSubmitting ? "Placing Order..." : "Place Order"}
+                    </button>
+                    <p className="text-xs text-neutral-400 mt-6 text-center leading-relaxed">
+                        Standard Shipping: 3-4 days inside Dhaka, 4-7 days outside Dhaka.
+                    </p>
                 </div>
-                <button 
-                    onClick={placeOrder}
-                    className='w-full p-2 text-white text-sm bg-black hover:bg-brand-primary duration-200 cursor-pointer'>
-                    PLACE ORDER
-                </button>
             </div>
         </div>
     </div>

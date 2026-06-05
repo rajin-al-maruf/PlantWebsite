@@ -25,16 +25,19 @@ const SocialAuth = ({isLogin}: SocialAuthProps) => {
   };
 
   return (
-    <div className='mt-6 text-center border-t border-t-neutral-300 w-full relative'>
-        <p className='bg-white px-4 text-neutral-600 text-xs absolute -top-2 left-1/2 -translate-x-1/2'>
-            OR
-        </p>
-        <div 
-            onClick={handleGoogleLogin}
-            className='flex items-center justify-center mt-6 py-2 gap-2 w-full border border-neutral-300 hover:bg-neutral-100 cursor-pointer'>
-            <FcGoogle size={20}/>
-            <p className='text-xs'>{isLogin? 'Login with Google' : 'Sign Up with Google'}</p>
+    <div className='mt-4 w-full'>
+        <div className="relative flex items-center py-2">
+            <div className="flex-grow border-t border-neutral-200"></div>
+            <span className="flex-shrink-0 px-3 text-neutral-400 text-[10px] font-semibold uppercase tracking-wider">Or</span>
+            <div className="flex-grow border-t border-neutral-200"></div>
         </div>
+        <button 
+            type="button"
+            onClick={handleGoogleLogin}
+            className='flex items-center justify-center mt-3 py-2.5 gap-2 w-full border border-neutral-200 bg-white hover:bg-neutral-50 rounded-lg transition-colors cursor-pointer text-sm font-medium text-brand-primary-dark'>
+            <FcGoogle size={18}/>
+            {isLogin? 'Log in with Google' : 'Sign up with Google'}
+        </button>
     </div>
   );
 };
