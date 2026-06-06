@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useCartStore from "../store/cartStore";
 import { useState } from "react";
 import type { ChangeEvent } from "react";

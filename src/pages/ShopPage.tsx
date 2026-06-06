@@ -10,6 +10,7 @@ import Breadcrumb from '../components/Breadcrumb'
 import type { Plant } from "../App";
 import type { Dispatch, SetStateAction } from "react";
 import type { FilterOption } from '../filterInfo';
+import { IoIosArrowDown } from 'react-icons/io'
 
 interface ShopPageProps {
   plants: Plant[];
@@ -51,7 +52,7 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
     const fetchPlants = async () => {
       try {
         setIsLoading(true)
-        let plantData = supabase.from('plants').select('*', { count: 'exact' })
+        let plantData = supabase.from('plants').select('*', { count: 'exact' }).eq('product_type', 'Single Plant')
 
         if(filter.category.length > 0){
           plantData = plantData.in("category", filter.category)
@@ -142,19 +143,39 @@ const ShopPage = ({plants, setPlants}: ShopPageProps) => {
           </button>
         </div>
         <div className='flex items-center gap-3'>
-          <p className='text-sm text-neutral-500 font-medium hidden sm:block'>Sort by:</p>
-          <select 
-            className='px-4 py-2.5 text-sm bg-neutral-100 border-none text-brand-primary-dark font-medium rounded-full outline-none focus:ring-2 focus:ring-brand-primary/50 cursor-pointer appearance-none'
-            value={sortBy}
-            onChange={(e) => {
-              setSortBy(e.target.value);
-              setPage(1);
-            }}
-          >
-            <option value="newest">Newest Arrivals</option>
-            <option value="low-to-high">Price: Low to High</option>
-            <option value="high-to-low">Price: High to Low</option>
-          </select>
+          <p className='text-[10px] font-bold uppercase tracking-widest text-neutral-400 hidden sm:block mt-0.5'>Sort by</p>
+          <div className="relative group" tabIndex={0}>
+            <div className='flex items-center justify-between gap-3 pl-4 pr-3 py-2 text-xs bg-white border border-neutral-200 text-brand-primary-dark font-medium rounded-full outline-none group-focus-within:border-brand-primary group-focus-within:ring-4 group-focus-within:ring-brand-primary/10 hover:border-brand-primary/40 transition-all cursor-pointer shadow-sm min-w-[150px] select-none'>
+              <span>
+                {sortBy === 'newest' && "Newest Arrivals"}
+                {sortBy === 'low-to-high' && "Price: Low to High"}
+                {sortBy === 'high-to-low' && "Price: High to Low"}
+              </span>
+              <IoIosArrowDown size={16} className="text-neutral-400 group-hover:text-brand-primary group-focus-within:rotate-180 transition-all duration-300" />
+            </div>
+            
+            <div className="absolute top-full right-0 mt-2 w-full bg-white border border-neutral-100 shadow-xl rounded-2xl overflow-hidden opacity-0 translate-y-2 pointer-events-none group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto transition-all duration-300 z-50 flex flex-col py-2">
+              {[
+                { id: 'newest', label: 'Newest Arrivals' },
+                { id: 'low-to-high', label: 'Price: Low to High' },
+                { id: 'high-to-low', label: 'Price: High to Low' },
+              ].map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => {
+                    setSortBy(option.id);
+                    setPage(1);
+                    (document.activeElement as HTMLElement)?.blur();
+                  }}
+                  className={`px-4 py-2 text-xs font-medium text-left hover:bg-neutral-50 transition-colors ${
+                    sortBy === option.id ? 'text-brand-primary bg-brand-primary/5' : 'text-brand-primary-dark'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       <div className='md:grid grid-cols-4 gap-10 mt-6'>

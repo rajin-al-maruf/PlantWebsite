@@ -23,16 +23,17 @@ const WishlistProductCard = ({plant} : WishlistProductCardProps) => {
                 />
 
                 <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 gap-3">
-                    <div 
+                    <button 
                         onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
                             addToCart(plant)
                         }}
-                        className="flex items-center justify-center h-10 w-10 text-brand-primary-dark hover:text-white bg-white hover:bg-brand-primary rounded-full active:scale-95 duration-300 shadow-sm cursor-pointer">
+                        disabled={plant.availability === 'Out Of Stock'}
+                        className="flex items-center justify-center h-10 w-10 text-brand-primary-dark hover:text-white bg-white hover:bg-brand-primary rounded-full active:scale-95 duration-300 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-brand-primary-dark disabled:active:scale-100">
                         <FaCartPlus size={16}/>
-                    </div>
-                    <div 
+                    </button>
+                    <button 
                         onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
@@ -40,7 +41,7 @@ const WishlistProductCard = ({plant} : WishlistProductCardProps) => {
                         }}
                         className="flex items-center justify-center h-10 w-10 text-red-500 bg-white hover:bg-red-500 hover:text-white rounded-full active:scale-95 duration-300 shadow-sm cursor-pointer">
                         <IoCloseSharp size={20}/>
-                    </div>
+                    </button>
                 </div>
             </div>
             <div className='flex flex-col flex-1 p-4 text-center border-t border-neutral-100'>

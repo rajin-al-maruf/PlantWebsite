@@ -4,6 +4,8 @@ import PageLayout from "./PageLayout/PageLayout"
 import HomePage from "./pages/HomePage"
 import ShopPage from "./pages/ShopPage"
 import ProductPage from "./pages/ProductPage"
+import ComboPage from "./pages/ComboPage"
+import SoilPotsPage from "./pages/SoilPotsPage"
 import AboutPage from "./pages/AboutPage"
 import ContactPage from "./pages/ContactPage"
 import CartPage from "./pages/CartPage"
@@ -33,7 +35,8 @@ export interface Plant {
   carelevel: string
   availability: string
   category: string
-  stock: number
+  gallery?: string[]
+  product_type?: string
   created_at: string | null
 }
 
@@ -57,6 +60,22 @@ function App() {
             path="/shop" 
             element={
               <ShopPage 
+                plants={plants}
+                setPlants={setPlants}
+              />}
+          />
+          <Route
+            path="/combo" 
+            element={
+              <ComboPage 
+                plants={plants}
+                setPlants={setPlants}
+              />}
+          />
+          <Route
+            path="/soil-pots" 
+            element={
+              <SoilPotsPage 
                 plants={plants}
                 setPlants={setPlants}
               />}

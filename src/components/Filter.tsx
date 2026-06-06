@@ -1,14 +1,12 @@
-import { useState, type Dispatch, type SetStateAction } from 'react'
+import { useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
-import type { FilterState } from '../pages/ShopPage'
-import type { FilterOption } from '../filterInfo'
 
 interface FilterProps {
     title: string;
     options: string[];
-    filter: FilterState;
-    setFilter: Dispatch<SetStateAction<FilterState>>;
-    filterType: FilterOption['id'];
+    filter: any;
+    setFilter: any;
+    filterType: string;
 }
 
 const Filter = ({title, options, filter, setFilter, filterType}: FilterProps) => {
@@ -18,8 +16,8 @@ const Filter = ({title, options, filter, setFilter, filterType}: FilterProps) =>
     const [openFilter, setOpenFilter] = useState(true);
 
     const handleCheckboxChange = (option: string) => {
-        setFilter((prev) => {
-            let updateFilter = [...prev[filterType]]
+        setFilter((prev: any) => {
+            let updateFilter = [...(prev[filterType] || [])]
 
             if(updateFilter.includes(option)){
                 updateFilter = updateFilter.filter((op) => op !== option)
@@ -53,7 +51,7 @@ const Filter = ({title, options, filter, setFilter, filterType}: FilterProps) =>
                                 type="checkbox" 
                                 className="rounded-md size-4 accent-brand-primary" 
                         onChange={() => handleCheckboxChange(option)}
-                                checked={filter[filterType].includes(option)}
+                                checked={filter[filterType]?.includes(option) || false}
                             />
                             <span className="ml-3 text-sm text-neutral-600 group-hover:text-brand-primary transition-colors">{option}</span>
                         </label>

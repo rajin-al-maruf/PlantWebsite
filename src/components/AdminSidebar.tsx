@@ -1,10 +1,18 @@
 import { NavLink } from "react-router-dom"
-import { MdOutlineDashboard, MdOutlineShoppingCart } from "react-icons/md";
+import { MdOutlineDashboard, MdOutlineShoppingCart, MdOutlineLogout } from "react-icons/md";
 import { AiOutlineProduct } from "react-icons/ai";
+import { supabase } from "../supabase";
+import { toast } from "sonner";
 
 const AdminSidebar = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success("Logged out successfully");
+    window.location.reload(); 
+  };
+
   return (
-    <div className="w-64 bg-white border-r border-neutral-200 flex flex-col min-h-screen">
+    <div className="w-64 bg-white border-r border-neutral-200 flex flex-col h-screen sticky top-0">
       <div className="p-6 flex items-center gap-3 mb-4">
         <img src='/assets/BonomayaLogo.jpg' className='w-10 h-10 rounded-full shadow-sm' alt="BonomayaLogo" />
         <span className="text-xl font-bold text-brand-primary-dark tracking-wide">Admin</span>
@@ -51,6 +59,16 @@ const AdminSidebar = () => {
           <AiOutlineProduct size={20}/>
           <span>Products</span>
         </NavLink>
+      </div>
+
+      <div className="p-4 mt-auto border-t border-neutral-100">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold text-neutral-500 hover:bg-red-50 hover:text-red-500 transition-all duration-300 cursor-pointer"
+        >
+          <MdOutlineLogout size={20}/>
+          <span>Log Out</span>
+        </button>
       </div>
     </div>
   )

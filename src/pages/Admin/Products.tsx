@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../supabase';
 import { toast } from 'sonner';
 import type { Plant } from '../../App';
-import Spinner from '../../components/Spinner';
 import ProductModal from '../../components/ProductModal';
+import { CiSearch } from 'react-icons/ci';
 
 const Products = () => {
 
@@ -12,11 +12,23 @@ const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const ITEMS_PER_PAGE = 8;
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+  // Debounce the search input so it doesn't spam Supabase on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+      setPage(1); // Reset to first page on new search
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const fetchPlants = async () => {
     try {
@@ -24,11 +36,17 @@ const Products = () => {
       const from = (page - 1) * ITEMS_PER_PAGE;
       const to = from + ITEMS_PER_PAGE - 1;
 
-      const {data, error, count} = await supabase
+      let query = supabase
         .from('plants')
         .select('*', { count: 'exact' })
         .order('created_at', { ascending: false })
         .range(from, to);
+
+      if (debouncedQuery) {
+        query = query.ilike('name', `%${debouncedQuery}%`);
+      }
+
+      const {data, error, count} = await query;
 
       if(error) {
         console.error("Supabase error:", error.message);
@@ -45,7 +63,7 @@ const Products = () => {
 
   useEffect(() => {
       fetchPlants()
-    },[page])
+    },[page, debouncedQuery])
 
     const handleDelete = async (id: string) => {
       const confirmDelete = confirm("Are you sure you want to delete this product?");
@@ -74,21 +92,32 @@ const Products = () => {
       }
     };
 
-  if (isLoading) {
-    return <Spinner />
-  }
-
   return (
     <div className="animate-fade-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-        <div>
+      {/* Header & Search */}
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-8">
+        <div className="shrink-0">
           <h1 className="text-3xl font-bold text-brand-primary-dark tracking-tight">Products</h1>
           <p className="text-neutral-500 mt-2 text-sm">Manage your inventory and product listings.</p>
         </div>
+
+        {/* Search Bar */}
+        <div className="flex-1 w-full md:max-w-2xl xl:px-8">
+          <div className="flex items-center bg-transparent rounded-2xl px-4 py-3 border border-neutral-200/70 focus-within:border-brand-primary focus-within:ring-4 focus-within:ring-brand-primary/10 transition-all w-full">
+            <CiSearch size={22} className="text-neutral-400 mr-3 shrink-0" />
+            <input
+              type="text"
+              placeholder="Search products by name..."
+              className="w-full bg-transparent border-none outline-none text-sm text-brand-primary-dark placeholder:text-neutral-400"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
         <button 
           onClick={() => { setSelectedPlant(null); setIsModalOpen(true); }}
-          className="bg-brand-primary hover:bg-brand-primary-dark text-white px-6 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-lg shadow-brand-primary/30 hover:-translate-y-1 cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto"
+          className="bg-brand-primary hover:bg-brand-primary-dark text-white px-6 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-lg shadow-brand-primary/30 hover:-translate-y-1 cursor-pointer flex items-center justify-center gap-2 w-full xl:w-auto shrink-0"
         >
           + Add Product
         </button>
@@ -102,12 +131,21 @@ const Products = () => {
               <tr className="text-[10px] sm:text-xs text-neutral-400 uppercase tracking-widest border-b border-neutral-200">
                 <th className="pb-4 font-semibold px-4">Product</th>
                 <th className="pb-4 font-semibold px-4">Category</th>
+                <th className="pb-4 font-semibold px-4">Availability</th>
                 <th className="pb-4 font-semibold px-4">Price</th>
                 <th className="pb-4 font-semibold px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {plants.map((plant) => (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className="py-16">
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-brand-primary border-solid"></div>
+                    </div>
+                  </td>
+                </tr>
+              ) : plants.length > 0 ? plants.map((plant) => (
                 <tr key={plant.id} className="border-b border-neutral-100 hover:bg-neutral-50 transition-colors group">
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-4">
@@ -118,6 +156,16 @@ const Products = () => {
                     </div>
                   </td>
                   <td className="py-4 px-4 text-sm text-neutral-500">{plant.category}</td>
+                  <td className="py-4 px-4">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                      plant.availability === 'In Stock' 
+                        ? 'bg-green-50 text-green-700 border-green-200' 
+                        : 'bg-red-50 text-red-700 border-red-200'
+                    }`}>
+                      {plant.availability === 'In Stock' && <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5 animate-pulse"></span>}
+                      {plant.availability}
+                    </span>
+                  </td>
                   <td className="py-4 px-4 text-sm font-bold text-brand-primary">Tk {plant.price}</td>
                   <td className="py-4 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -130,13 +178,17 @@ const Products = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center text-sm text-neutral-500">No products found matching your search.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
         
         {/* Pagination Controls */}
-        {totalPages > 1 && (
+        {!isLoading && totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 p-6 border-t border-neutral-100 bg-neutral-50/50">
             <button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}

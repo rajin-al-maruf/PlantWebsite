@@ -43,8 +43,8 @@ const ContactPage = () => {
                  <MdOutlineLocationOn size={24} />
                </div>
                <div>
-                 <h3 className="text-base font-bold text-brand-primary-dark mb-1">Our Store</h3>
-                 <p className="text-sm text-neutral-500 leading-relaxed">123 Green Street<br/>Dhaka, Bangladesh</p>
+                 <h3 className="text-base font-bold text-brand-primary-dark mb-1">Our Source</h3>
+                 <p className="text-sm text-neutral-500 leading-relaxed">Ashulia<br/>Dhaka, Bangladesh</p>
                </div>
             </motion.div>
 
@@ -57,7 +57,7 @@ const ContactPage = () => {
                </div>
                <div>
                  <h3 className="text-base font-bold text-brand-primary-dark mb-1">Contact Information</h3>
-                 <p className="text-sm text-neutral-500 leading-relaxed">Email: hello@bonomaya.com<br/>Phone: 01234-678901</p>
+                 <p className="text-sm text-neutral-500 leading-relaxed">Email: bonomaya880@gmail.com<br/>Phone: 01571 543813</p>
                </div>
             </motion.div>
 
@@ -70,7 +70,7 @@ const ContactPage = () => {
                </div>
                <div>
                  <h3 className="text-base font-bold text-brand-primary-dark mb-1">Business Hours</h3>
-                 <p className="text-sm text-neutral-500 leading-relaxed">Monday - Friday: 9:00 AM - 8:00 PM<br/>Saturday - Sunday: 10:00 AM - 6:00 PM</p>
+                 <p className="text-sm text-neutral-500 leading-relaxed">Always Open</p>
                </div>
             </motion.div>
           </div>

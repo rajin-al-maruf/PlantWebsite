@@ -71,7 +71,7 @@ const Hero = () => {
           </Link>
           <button className="w-full sm:w-auto flex items-center justify-center px-8 py-4 text-sm font-bold uppercase tracking-widest border border-neutral-200 bg-white text-neutral-500 hover:text-brand-primary hover:border-brand-primary transition-all duration-300 rounded-full cursor-pointer shadow-sm">
             <PiPhoneCallThin className="mr-2" size={24} />
-            01234-678901
+            01571 543813
           </button>
         </motion.div>
       </div>

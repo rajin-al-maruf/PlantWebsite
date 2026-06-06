@@ -61,9 +61,10 @@ return (
                         e.preventDefault();
                         addToCart(plant)
                     }}
-                    className='mt-auto w-full py-2.5 bg-transparent border border-neutral-300 text-black hover:border-brand-primary hover:bg-brand-primary hover:text-white active:scale-95 transition-all duration-300 text-xs font-bold uppercase tracking-widest cursor-pointer rounded-lg'
+                    disabled={plant.availability === 'Out Of Stock'}
+                    className='mt-auto w-full py-2.5 bg-transparent border border-neutral-300 text-black hover:border-brand-primary hover:bg-brand-primary hover:text-white active:scale-95 transition-all duration-300 text-xs font-bold uppercase tracking-widest cursor-pointer rounded-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-neutral-300 disabled:hover:bg-transparent disabled:hover:text-black disabled:active:scale-100'
                 >
-                    ADD TO CART
+                    {plant.availability === 'Out Of Stock' ? 'OUT OF STOCK' : 'ADD TO CART'}
                 </button>
             </div>
         </div>

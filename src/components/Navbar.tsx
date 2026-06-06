@@ -3,6 +3,7 @@ import { CiHeart, CiSearch, CiUser } from 'react-icons/ci'
 import { PiShoppingCartSimpleLight } from 'react-icons/pi'
 import { HiOutlineMenuAlt2 } from 'react-icons/hi'
 import { IoCloseOutline } from 'react-icons/io5'
+import { IoIosArrowDown } from 'react-icons/io'
 import { Link, useNavigate } from 'react-router-dom'
 import useCartStore from '../store/cartStore'
 import useWishlistStore from '../store/wishlistStore'
@@ -78,6 +79,7 @@ const Navbar = () => {
   }, [])
 
   const [showSideNav, setShowSideNav] = useState(false)
+  const [showMobileShop, setShowMobileShop] = useState(false)
   const cart = useCartStore((state) => state.cart)
   const wishlist = useWishlistStore((state) => state.wishlist)
 
@@ -144,7 +146,19 @@ const Navbar = () => {
             </div>
             <ul className='flex flex-col py-6 px-8 gap-6'>
               <li><Link to="/" onClick={() => setShowSideNav(false)} className='block text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>Home</Link></li>
-              <li><Link to="/shop" onClick={() => setShowSideNav(false)} className='block text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>Shop</Link></li>
+              <li>
+                <div onClick={() => setShowMobileShop(!showMobileShop)} className='flex items-center justify-between cursor-pointer text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>
+                  <span>Shop</span>
+                  <IoIosArrowDown className={`transition-transform duration-300 ${showMobileShop ? 'rotate-180' : ''}`} />
+                </div>
+                <div className={`overflow-hidden transition-all duration-300 ${showMobileShop ? 'max-h-40 mt-4' : 'max-h-0'}`}>
+                  <ul className="flex flex-col gap-4 pl-4 border-l-2 border-neutral-100">
+                    <li><Link to="/shop" onClick={() => setShowSideNav(false)} className='block text-base font-medium text-brand-primary-dark hover:text-brand-primary transition-colors'>Indoor Plants</Link></li>
+                    <li><Link to="/combo" onClick={() => setShowSideNav(false)} className='block text-base font-medium text-brand-primary-dark hover:text-brand-primary transition-colors'>Plant Combo</Link></li>
+                    <li><Link to="/soil-pots" onClick={() => setShowSideNav(false)} className='block text-base font-medium text-brand-primary-dark hover:text-brand-primary transition-colors'>Soil & Pots</Link></li>
+                  </ul>
+                </div>
+              </li>
               <li><Link to="/about" onClick={() => setShowSideNav(false)} className='block text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>About</Link></li>
               <li><Link to="/contact" onClick={() => setShowSideNav(false)} className='block text-lg font-bold text-brand-primary-dark hover:text-brand-primary transition-colors'>Contact</Link></li>
             </ul>
@@ -162,7 +176,19 @@ const Navbar = () => {
             <Link to='/' className="shrink-0"><img src="/assets/BonomayaLogo.jpg" className='w-12 h-12 rounded-full shadow-sm hover:scale-105 transition-transform duration-300' alt="BonomayaLogo" /></Link>
             <ul className='flex items-center gap-6 lg:gap-8'>
               <li><Link to="/" className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-sm font-bold tracking-wide transition-colors'>Home</Link></li>
-              <li><Link to="/shop" className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-sm font-bold tracking-wide transition-colors'>Shop</Link></li>
+              <li className='relative group'>
+                <div className='flex items-center gap-1 cursor-pointer text-brand-primary-dark group-hover:text-brand-primary text-sm font-bold tracking-wide transition-colors py-2'>
+                  Shop <IoIosArrowDown className='transition-transform duration-300 group-hover:rotate-180' size={16} />
+                </div>
+                {/* pt-4 creates an invisible "bridge" so the mouse doesn't lose hover when dragging down */}
+                <div className='absolute top-full left-0 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300'>
+                  <ul className='bg-white border border-neutral-100 shadow-xl rounded-xl py-2 w-48 flex flex-col'>
+                    <li><Link to="/shop" className='block px-5 py-2.5 text-sm font-medium text-brand-primary-dark hover:text-brand-primary hover:bg-neutral-50 transition-colors'>Indoor Plants</Link></li>
+                    <li><Link to="/combo" className='block px-5 py-2.5 text-sm font-medium text-brand-primary-dark hover:text-brand-primary hover:bg-neutral-50 transition-colors'>Plant Combo</Link></li>
+                    <li><Link to="/soil-pots" className='block px-5 py-2.5 text-sm font-medium text-brand-primary-dark hover:text-brand-primary hover:bg-neutral-50 transition-colors'>Soil & Pots</Link></li>
+                  </ul>
+                </div>
+              </li>
               <li><Link to="/about" className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-sm font-bold tracking-wide transition-colors'>About</Link></li>
               <li><Link to="/contact" className='cursor-pointer text-brand-primary-dark hover:text-brand-primary text-sm font-bold tracking-wide transition-colors'>Contact</Link></li>
             </ul>
@@ -196,7 +222,7 @@ const Navbar = () => {
                       </div>
                       <div className="flex-col flex-1 overflow-hidden">
                         <p className='text-sm font-bold text-brand-primary-dark truncate'>{plant.name}</p>
-                        <p className='text-xs text-neutral-500 mt-0.5'>{plant.availability}</p>
+                        <p className={`text-[10px] sm:text-xs font-medium mt-0.5 ${plant.availability === 'Out Of Stock' ? 'text-red-500' : 'text-neutral-500'}`}>{plant.availability}</p>
                       </div>
                       <p className='text-sm font-semibold text-brand-primary'>Tk {plant.price}</p>
                     </Link>
